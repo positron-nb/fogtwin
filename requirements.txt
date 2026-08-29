@@ -4,8 +4,7 @@ pydantic>=2.6
 httpx>=0.27          # sim/fleet_sim.py only
 paho-mqtt>=2.0       # optional: enable with FOGTWIN_MQTT=<broker host>
 
-# Build-time only. Needed to regenerate the terrain and road network from the
-# DEM (scripts/fetch_dem.py, scripts/build_roadgraph.py). The committed outputs
-# in data/ mean the server and both front ends run without these.
-numpy>=1.26
-pillow>=10.0
+# numpy/pillow moved to requirements-build.txt: they're only needed to
+# regenerate the terrain and road network from the DEM. The committed outputs
+# in data/ mean the deployed server never touches those scripts, and skipping
+# them keeps the runtime install small — this is what a host actually installs.

@@ -1,0 +1,7 @@
+# Build-time only. Needed to run scripts/fetch_dem.py and
+# scripts/build_roadgraph.py to regenerate data/dem/ and data/roadgraph.json
+# from scratch. Not installed on the deployed server — its committed outputs
+# in data/ are all it needs.
+-r requirements.txt
+numpy>=1.26
+pillow>=10.0

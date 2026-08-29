@@ -69,7 +69,9 @@ ENABLE_SIM = os.environ.get("FOGTWIN_SIM", "1") != "0"
 SIM_FLEET_SIZE = int(os.environ.get("FOGTWIN_FLEET", "6"))
 MQTT_HOST = os.environ.get("FOGTWIN_MQTT", "")
 MQTT_PORT = int(os.environ.get("FOGTWIN_MQTT_PORT", "1883"))
-HTTP_PORT = int(os.environ.get("FOGTWIN_PORT", "8000"))
+# Render, Railway, Fly and most PaaS hosts inject PORT and expect the app
+# to bind it; FOGTWIN_PORT stays as a manual override for local runs.
+HTTP_PORT = int(os.environ.get("PORT", os.environ.get("FOGTWIN_PORT", "8000")))
 
 _R_EARTH = 6378137.0
 

@@ -1,0 +1,24 @@
+# Render Blueprint — one-click deploy of the FogTwin server.
+#
+# Render reads this automatically when you connect the repo at
+# render.com/deploy or via Dashboard -> New -> Blueprint. It builds a normal
+# Python web service: pip install, then uvicorn bound to the PORT Render
+# injects. No Docker, no extra config.
+#
+# The free plan spins the service down after 15 minutes idle and takes
+# 30-60s to wake on the next request — expected, not a bug. Hit the URL a
+# minute before you actually need it live (a judge clicking a link is exactly
+# the kind of cold request this warm-up avoids).
+
+services:
+  - type: web
+    name: fogtwin
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn twin.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: FOGTWIN_SIM
+        value: "1"          # populate the demo with the simulated fleet
+      - key: PYTHON_VERSION
+        value: "3.12.0"
