@@ -15,305 +15,674 @@
    "group": "perception",
    "label": "77 GHz long-range radar",
    "part": "TI AWR2944 or Continental ARS408-21",
-   "pos": [5.05, 0.0, 3.55],
-   "yaw": 0, "pitch": -1.5,
-   "size": [0.1, 0.18, 0.14],
+   "pos": [
+    5.05,
+    0.0,
+    3.55
+   ],
+   "yaw": 0,
+   "pitch": -1.5,
+   "size": [
+    0.1,
+    0.18,
+    0.14
+   ],
    "colour": "#E4652F",
    "role": "Detects and tracks moving mass directly ahead, with range and radial velocity measured rather than inferred.",
    "fog": "Wavelength 3.9 mm against a 10 micrometre droplet, roughly 390 times larger, so Mie scattering is negligible and range is unaffected by fog.",
-   "coverage": { "kind": "cone", "range_m": 250, "az_deg": 18, "el_deg": 10, "colour": "#E4652F" },
-   "power_w": 6, "bus": "Ethernet / CAN-FD", "qty": 1, "unit_inr": 35000,
+   "coverage": {
+    "kind": "cone",
+    "range_m": 250,
+    "az_deg": 18,
+    "el_deg": 10,
+    "colour": "#E4652F"
+   },
+   "power_w": 6,
+   "bus": "Ethernet / CAN-FD",
+   "qty": 1,
+   "unit_inr": 35000,
    "rover": "HB100 or RCWL-0516 Doppler module. Same physics, no angular resolution."
   },
   {
    "id": "radar-cl",
    "group": "perception",
    "label": "Corner radar, left rear",
-   "part": "TI IWR6843 short range",
-   "pos": [-3.3, 3.05, 3.2],
-   "yaw": 145, "pitch": -4,
-   "size": [0.09, 0.15, 0.12],
+   "part": "Automotive-grade 24 GHz corner radar module (production sourcing, not a TI eval kit)",
+   "pos": [
+    -3.3,
+    3.05,
+    3.2
+   ],
+   "yaw": 145,
+   "pitch": -4,
+   "size": [
+    0.09,
+    0.15,
+    0.12
+   ],
    "colour": "#E4652F",
    "role": "Covers the reversing and quartering geometry: the tip edge, and the light vehicle behind you.",
    "fog": "Immune. Reversing at a tip edge is where fog kills people, and it is exactly where the operator has no view.",
-   "coverage": { "kind": "cone", "range_m": 80, "az_deg": 120, "el_deg": 30, "colour": "#E4652F" },
-   "power_w": 5, "bus": "CAN-FD", "qty": 1, "unit_inr": 18000,
-   "rover": "Shared Doppler module, time multiplexed"
+   "coverage": {
+    "kind": "cone",
+    "range_m": 80,
+    "az_deg": 120,
+    "el_deg": 30,
+    "colour": "#E4652F"
+   },
+   "power_w": 5,
+   "bus": "CAN-FD",
+   "qty": 1,
+   "unit_inr": 9000,
+   "rover": "Shared Doppler module, time multiplexed",
+   "costnote": "Same coverage geometry; the earlier TI IWR6843 price was an evaluation-board price, not a production-module price. Automotive corner radar is a mass-produced part."
   },
   {
    "id": "radar-cr",
    "group": "perception",
    "label": "Corner radar, right rear",
-   "part": "TI IWR6843 short range",
-   "pos": [-3.3, -3.05, 3.2],
-   "yaw": -145, "pitch": -4,
-   "size": [0.09, 0.15, 0.12],
+   "part": "Automotive-grade 24 GHz corner radar module (production sourcing, not a TI eval kit)",
+   "pos": [
+    -3.3,
+    -3.05,
+    3.2
+   ],
+   "yaw": -145,
+   "pitch": -4,
+   "size": [
+    0.09,
+    0.15,
+    0.12
+   ],
    "colour": "#E4652F",
    "role": "Mirror of the left corner unit. Together they close the 360 degree near field around the machine.",
    "fog": "Immune.",
-   "coverage": { "kind": "cone", "range_m": 80, "az_deg": 120, "el_deg": 30, "colour": "#E4652F" },
-   "power_w": 5, "bus": "CAN-FD", "qty": 1, "unit_inr": 18000,
-   "rover": "Shared Doppler module, time multiplexed"
+   "coverage": {
+    "kind": "cone",
+    "range_m": 80,
+    "az_deg": 120,
+    "el_deg": 30,
+    "colour": "#E4652F"
+   },
+   "power_w": 5,
+   "bus": "CAN-FD",
+   "qty": 1,
+   "unit_inr": 9000,
+   "rover": "Shared Doppler module, time multiplexed",
+   "costnote": "Same coverage geometry; the earlier TI IWR6843 price was an evaluation-board price, not a production-module price. Automotive corner radar is a mass-produced part."
   },
   {
    "id": "thermal",
    "group": "perception",
    "label": "LWIR thermal camera",
-   "part": "FLIR Boson 640, 8 to 14 micrometre",
-   "pos": [4.7, 0.75, 4.25],
-   "yaw": 0, "pitch": -6,
-   "size": [0.08, 0.08, 0.08],
+   "part": "FLIR Boson 320, 8 to 14 micrometre (lower-res core)",
+   "pos": [
+    4.7,
+    0.75,
+    4.25
+   ],
+   "yaw": 0,
+   "pitch": -6,
+   "size": [
+    0.08,
+    0.08,
+    0.08
+   ],
    "colour": "#E0A93B",
    "role": "Classifies what the radar can only call something: a person, a running engine, a hot brake.",
    "fog": "Degraded but usable. The band is comparable to droplet size, so it loses range, yet keeps warm bodies visible far longer than the eye does.",
-   "coverage": { "kind": "frustum", "range_m": 300, "az_deg": 50, "el_deg": 40, "colour": "#E0A93B" },
-   "power_w": 3, "bus": "USB 3 / GMSL2", "qty": 1, "unit_inr": 25000,
-   "rover": "AMG8833 8x8 thermal array. Same band, 64 pixels."
+   "coverage": {
+    "kind": "frustum",
+    "range_m": 300,
+    "az_deg": 50,
+    "el_deg": 40,
+    "colour": "#E0A93B"
+   },
+   "power_w": 3,
+   "bus": "USB 3 / GMSL2",
+   "qty": 1,
+   "unit_inr": 14000,
+   "rover": "AMG8833 8x8 thermal array. Same band, 64 pixels.",
+   "costnote": "Person detection at the 50-150 m ranges that matter (tip point, loading bay) does not need 640x512. The 300 m frustum in this scene is unchanged; far-range confidence derates slightly."
   },
   {
    "id": "cam",
    "group": "perception",
    "label": "Visible camera",
    "part": "Global-shutter GMSL2, 2 MP",
-   "pos": [4.7, -0.75, 4.25],
-   "yaw": 0, "pitch": -6,
-   "size": [0.07, 0.07, 0.07],
+   "pos": [
+    4.7,
+    -0.75,
+    4.25
+   ],
+   "yaw": 0,
+   "pitch": -6,
+   "size": [
+    0.07,
+    0.07,
+    0.07
+   ],
    "colour": "#6FA8C8",
    "role": "Not used for driving. It measures visibility, records evidence for incident replay, and reads signage.",
    "fog": "Fails as a driving sensor, and that is the point of the whole design. We use it to MEASURE the fog, not to see through it.",
-   "coverage": { "kind": "frustum", "range_m": 120, "az_deg": 60, "el_deg": 38, "colour": "#6FA8C8" },
-   "power_w": 3, "bus": "GMSL2", "qty": 1, "unit_inr": 9000,
+   "coverage": {
+    "kind": "frustum",
+    "range_m": 120,
+    "az_deg": 60,
+    "el_deg": 38,
+    "colour": "#6FA8C8"
+   },
+   "power_w": 3,
+   "bus": "GMSL2",
+   "qty": 1,
+   "unit_inr": 9000,
    "rover": "Raspberry Pi Camera v3"
   },
   {
    "id": "gnss",
    "group": "localisation",
    "label": "RTK-GNSS antenna",
-   "part": "u-blox ZED-F9P with survey antenna, NTRIP over site LTE",
-   "pos": [-0.6, 0.0, 5.62],
-   "yaw": 0, "pitch": 0,
-   "size": [0.16, 0.16, 0.07],
+   "part": "u-blox ZED-F9P, compact rover antenna (survey-grade antenna reserved for the static base station only)",
+   "pos": [
+    -0.6,
+    0.0,
+    5.62
+   ],
+   "yaw": 0,
+   "pitch": 0,
+   "size": [
+    0.16,
+    0.16,
+    0.07
+   ],
    "colour": "#4FBE8B",
    "role": "Two to three centimetres of absolute position. This is what lets the twin know where the road is without seeing it.",
    "fog": "Completely unaffected. A 19 to 24 cm wavelength passes through cloud as if it were not there.",
-   "coverage": { "kind": "dome", "range_m": 26, "colour": "#4FBE8B" },
-   "power_w": 2, "bus": "USB / UART", "qty": 1, "unit_inr": 22000,
-   "rover": "DWM1000 UWB trilateration, because GNSS is useless inside a hall"
+   "coverage": {
+    "kind": "dome",
+    "range_m": 26,
+    "colour": "#4FBE8B"
+   },
+   "power_w": 2,
+   "bus": "USB / UART",
+   "qty": 1,
+   "unit_inr": 16000,
+   "rover": "DWM1000 UWB trilateration, because GNSS is useless inside a hall",
+   "costnote": "Positioning accuracy is unchanged, same chipset. A moving rover does not need the survey-grade antenna housing a static base station does."
   },
   {
    "id": "imu",
    "group": "localisation",
    "label": "IMU and wheel odometry tap",
-   "part": "ADIS16470 or Bosch BMI088, plus J1939 CAN interface",
-   "pos": [1.3, 1.45, 2.3],
-   "yaw": 0, "pitch": 0,
-   "size": [0.12, 0.1, 0.06],
+   "part": "Bosch BMI088 (automotive-grade)",
+   "pos": [
+    1.3,
+    1.45,
+    2.3
+   ],
+   "yaw": 0,
+   "pitch": 0,
+   "size": [
+    0.12,
+    0.1,
+    0.06
+   ],
    "colour": "#4FBE8B",
    "role": "Bridges GNSS outages at 200 Hz: under the highwall, in the workshop, beside the shovel.",
    "fog": "Unaffected. Dead reckoning does not care about weather, only about elapsed time.",
-   "power_w": 2, "bus": "SPI + CAN", "qty": 1, "unit_inr": 8000,
-   "rover": "MPU-9250 with wheel encoders"
+   "power_w": 2,
+   "bus": "SPI + CAN",
+   "qty": 1,
+   "unit_inr": 5000,
+   "rover": "MPU-9250 with wheel encoders",
+   "costnote": "ADIS16470 is tactical-grade and priced for it. Bridging a GNSS gap for 30 seconds of dead reckoning does not need tactical-grade drift performance."
   },
   {
    "id": "uwb",
    "group": "localisation",
    "label": "UWB tag",
    "part": "Qorvo DW3000",
-   "pos": [3.4, 0.0, 5.3],
-   "yaw": 0, "pitch": 0,
-   "size": [0.09, 0.06, 0.03],
+   "pos": [
+    3.4,
+    0.0,
+    5.3
+   ],
+   "yaw": 0,
+   "pitch": 0,
+   "size": [
+    0.09,
+    0.06,
+    0.03
+   ],
    "colour": "#9B7FD4",
    "role": "Sub-30 cm ranging where it matters most: the tip edge, the loading bay, the workshop gate. It also ranges to personnel tags.",
    "fog": "Immune.",
-   "coverage": { "kind": "sphere", "range_m": 60, "colour": "#9B7FD4" },
-   "power_w": 1, "bus": "SPI", "qty": 1, "unit_inr": 3000,
+   "coverage": {
+    "kind": "sphere",
+    "range_m": 60,
+    "colour": "#9B7FD4"
+   },
+   "power_w": 1,
+   "bus": "SPI",
+   "qty": 1,
+   "unit_inr": 2500,
    "rover": "Identical part. This one is production hardware already."
   },
   {
    "id": "edge",
    "group": "compute",
    "label": "Edge compute node",
-   "part": "Jetson Orin Nano 8 GB in an IP67 vibration-isolated enclosure",
-   "pos": [2.1, 1.95, 3.45],
-   "yaw": 0, "pitch": 0,
-   "size": [0.3, 0.24, 0.14],
+   "part": "Jetson Orin Nano 4 GB, IP67 vibration-isolated enclosure",
+   "pos": [
+    2.1,
+    1.95,
+    3.45
+   ],
+   "yaw": 0,
+   "pitch": 0,
+   "size": [
+    0.3,
+    0.24,
+    0.14
+   ],
    "colour": "#E4E9EC",
    "role": "Sensor fusion, tracking, threat scoring, HUD rendering and the offline twin cache. Every safety-critical decision closes here.",
    "fog": "This is where the system stops needing to see. It holds the surveyed corridor, so a network drop costs foresight, never braking.",
-   "power_w": 25, "bus": "host", "qty": 1, "unit_inr": 35000,
-   "rover": "Raspberry Pi 4 or ESP32. Same ROS 2 topics, less throughput."
+   "power_w": 25,
+   "bus": "host",
+   "qty": 1,
+   "unit_inr": 18000,
+   "rover": "Raspberry Pi 4 or ESP32. Same ROS 2 topics, less throughput.",
+   "costnote": "Same JetPack/TensorRT/ROS 2 stack as the 8 GB variant, so nothing above the driver layer changes. 4 GB is enough for fusion, tracking and HUD rendering on one vehicle."
   },
   {
    "id": "modem",
    "group": "comms",
    "label": "LTE and C-V2X modem",
-   "part": "Quectel AG55xQ, private LTE plus PC5 sidelink",
-   "pos": [0.9, -1.2, 5.45],
-   "yaw": 0, "pitch": 0,
-   "size": [0.14, 0.1, 0.05],
+   "part": "LTE Cat-4 modem (C-V2X sidelink hardware deferred)",
+   "pos": [
+    0.9,
+    -1.2,
+    5.45
+   ],
+   "yaw": 0,
+   "pitch": 0,
+   "size": [
+    0.14,
+    0.1,
+    0.05
+   ],
    "colour": "#6FA8C8",
    "role": "Uplinks pose and detections to the nearest roadside unit at 5 Hz, and downlinks neighbours, tokens and speed advisories.",
    "fog": "Unaffected. Terrain blocks it, not weather, which is why we route through infrastructure rather than peer to peer.",
-   "coverage": { "kind": "sphere", "range_m": 900, "colour": "#6FA8C8" },
-   "power_w": 8, "bus": "USB 3", "qty": 1, "unit_inr": 12000,
-   "rover": "ESP32 Wi-Fi, or LoRa for the comms-loss demo"
+   "coverage": {
+    "kind": "sphere",
+    "range_m": 900,
+    "colour": "#6FA8C8"
+   },
+   "power_w": 8,
+   "bus": "USB 3",
+   "qty": 1,
+   "unit_inr": 6000,
+   "rover": "ESP32 Wi-Fi, or LoRa for the comms-loss demo",
+   "costnote": "The V2I2V architecture already routes every vehicle through a roadside unit rather than peer to peer, so phase one never actually used the PC5 sidelink radio it was priced with."
   },
   {
    "id": "lora",
    "group": "comms",
    "label": "LoRa safety heartbeat",
    "part": "Semtech SX1276, 865 MHz ISM",
-   "pos": [0.2, -1.2, 5.45],
-   "yaw": 0, "pitch": 0,
-   "size": [0.08, 0.06, 0.04],
+   "pos": [
+    0.2,
+    -1.2,
+    5.45
+   ],
+   "yaw": 0,
+   "pitch": 0,
+   "size": [
+    0.08,
+    0.06,
+    0.04
+   ],
    "colour": "#2D6480",
    "role": "Twenty bytes of pose plus an emergency flag, once a second. The link that survives when broadband does not.",
    "fog": "Unaffected, and non line of sight over 5 to 15 km in this terrain.",
-   "coverage": { "kind": "sphere", "range_m": 1800, "colour": "#2D6480" },
-   "power_w": 1, "bus": "SPI", "qty": 1, "unit_inr": 1500,
+   "coverage": {
+    "kind": "sphere",
+    "range_m": 1800,
+    "colour": "#2D6480"
+   },
+   "power_w": 1,
+   "bus": "SPI",
+   "qty": 1,
+   "unit_inr": 1500,
    "rover": "Identical part"
   },
   {
    "id": "hud",
    "group": "cab",
    "label": "Synthetic-vision display",
-   "part": "12 inch, 1500 nit sunlight readable",
-   "pos": [3.75, 1.55, 4.55],
-   "yaw": 0, "pitch": 0,
-   "size": [0.3, 0.05, 0.2],
+   "part": "10.1 inch, 1200 nit sunlight readable, resistive touch",
+   "pos": [
+    3.75,
+    1.55,
+    4.55
+   ],
+   "yaw": 0,
+   "pitch": 0,
+   "size": [
+    0.3,
+    0.05,
+    0.2
+   ],
    "colour": "#8FE3C0",
    "role": "Draws the road ahead from surveyed geometry. Readable in under 0.4 seconds, gloved, in a vibrating cab.",
    "fog": "This is the operator eye when the windscreen has nothing to offer.",
-   "power_w": 18, "bus": "HDMI + USB", "qty": 1, "unit_inr": 15000,
-   "rover": "Any tablet pointed at the same kiosk URL"
+   "power_w": 18,
+   "bus": "HDMI + USB",
+   "qty": 1,
+   "unit_inr": 10000,
+   "rover": "Any tablet pointed at the same kiosk URL",
+   "costnote": "Smaller and slightly less bright than the first spec; still meets the sub-0.4 s glance-legibility requirement at cab-mounting distance."
   },
   {
    "id": "haptic",
    "group": "cab",
    "label": "Seat haptic transducer",
    "part": "Tactile transducer pad, armrest and seat base",
-   "pos": [3.5, 1.55, 4.05],
-   "yaw": 0, "pitch": 0,
-   "size": [0.22, 0.2, 0.04],
+   "pos": [
+    3.5,
+    1.55,
+    4.05
+   ],
+   "yaw": 0,
+   "pitch": 0,
+   "size": [
+    0.22,
+    0.2,
+    0.04
+   ],
    "colour": "#8FE3C0",
    "role": "A directional warning the operator cannot tune out. Left buzz for a left-side threat.",
    "fog": "Cab noise runs 85 to 95 dB and operators wear ear protection, so audio alone is unreliable. Haptics are not decoration here.",
-   "power_w": 6, "bus": "Analogue", "qty": 1, "unit_inr": 3000,
+   "power_w": 6,
+   "bus": "Analogue",
+   "qty": 1,
+   "unit_inr": 2000,
    "rover": "Vibration motor on the demo tablet"
   },
   {
    "id": "psu",
    "group": "power",
    "label": "Isolated 24 V power unit",
-   "part": "DC-DC 24 V to 12 V and 5 V, fused and transient protected",
-   "pos": [0.6, -1.7, 2.45],
-   "yaw": 0, "pitch": 0,
-   "size": [0.24, 0.16, 0.1],
+   "part": "Single-channel isolated DC-DC 24 V to 5 V, fused, transient-protected",
+   "pos": [
+    0.6,
+    -1.7,
+    2.45
+   ],
+   "yaw": 0,
+   "pitch": 0,
+   "size": [
+    0.24,
+    0.16,
+    0.1
+   ],
    "colour": "#E4574F",
    "role": "Takes the machine 24 V bus, isolates it, and holds the kit up through cranking dips and load-dump transients.",
    "fog": "Nothing to do with fog, and everything to do with the kit still being alive after one monsoon.",
-   "power_w": 0, "bus": "24 V DC", "qty": 1, "unit_inr": 6000,
-   "rover": "USB power bank"
+   "power_w": 0,
+   "bus": "24 V DC",
+   "qty": 1,
+   "unit_inr": 4500,
+   "rover": "USB power bank",
+   "costnote": "Sized to the kit’s actual measured load rather than worst-case dual-output headroom."
   },
   {
    "id": "harness",
    "group": "power",
    "label": "Harness, mounts and enclosures",
    "part": "IP67 glands, automotive connectors, vibration-isolated brackets",
-   "pos": [0.0, 0.0, 2.0],
-   "yaw": 0, "pitch": 0,
-   "size": [0.0, 0.0, 0.0],
+   "pos": [
+    0.0,
+    0.0,
+    2.0
+   ],
+   "yaw": 0,
+   "pitch": 0,
+   "size": [
+    0.0,
+    0.0,
+    0.0
+   ],
    "colour": "#6E7A82",
    "hidden": true,
    "role": "The unglamorous half of a retrofit, and the half that decides whether it survives to the second monsoon.",
    "fog": "Not applicable.",
-   "power_w": 0, "bus": "Not applicable", "qty": 1, "unit_inr": 9000,
+   "power_w": 0,
+   "bus": "Not applicable",
+   "qty": 1,
+   "unit_inr": 7000,
    "rover": "Zip ties and heat shrink, honestly"
   }
  ],
  "links": [
-  { "from": "psu", "to": "edge", "kind": "power", "label": "12 V, 5 A" },
-  { "from": "psu", "to": "hud", "kind": "power", "label": "12 V" },
-  { "from": "psu", "to": "haptic", "kind": "power", "label": "12 V" },
-  { "from": "psu", "to": "radar-lr", "kind": "power", "label": "12 V" },
-  { "from": "psu", "to": "radar-cl", "kind": "power", "label": "12 V" },
-  { "from": "psu", "to": "radar-cr", "kind": "power", "label": "12 V" },
-  { "from": "radar-lr", "to": "edge", "kind": "data", "label": "Ethernet, tracks at 20 Hz" },
-  { "from": "radar-cl", "to": "edge", "kind": "data", "label": "CAN-FD" },
-  { "from": "radar-cr", "to": "edge", "kind": "data", "label": "CAN-FD" },
-  { "from": "thermal", "to": "edge", "kind": "data", "label": "USB 3, 640x512 at 30 Hz" },
-  { "from": "cam", "to": "edge", "kind": "data", "label": "GMSL2" },
-  { "from": "gnss", "to": "edge", "kind": "data", "label": "UART, RTCM in and NMEA out" },
-  { "from": "imu", "to": "edge", "kind": "data", "label": "SPI at 200 Hz plus J1939 CAN" },
-  { "from": "uwb", "to": "edge", "kind": "data", "label": "SPI, ranges at 10 Hz" },
-  { "from": "edge", "to": "modem", "kind": "data", "label": "MQTT over LTE" },
-  { "from": "edge", "to": "lora", "kind": "data", "label": "20 byte heartbeat at 1 Hz" },
-  { "from": "edge", "to": "hud", "kind": "data", "label": "HDMI, corridor render" },
-  { "from": "edge", "to": "haptic", "kind": "data", "label": "Alert level" }
+  {
+   "from": "psu",
+   "to": "edge",
+   "kind": "power",
+   "label": "12 V, 5 A"
+  },
+  {
+   "from": "psu",
+   "to": "hud",
+   "kind": "power",
+   "label": "12 V"
+  },
+  {
+   "from": "psu",
+   "to": "haptic",
+   "kind": "power",
+   "label": "12 V"
+  },
+  {
+   "from": "psu",
+   "to": "radar-lr",
+   "kind": "power",
+   "label": "12 V"
+  },
+  {
+   "from": "psu",
+   "to": "radar-cl",
+   "kind": "power",
+   "label": "12 V"
+  },
+  {
+   "from": "psu",
+   "to": "radar-cr",
+   "kind": "power",
+   "label": "12 V"
+  },
+  {
+   "from": "radar-lr",
+   "to": "edge",
+   "kind": "data",
+   "label": "Ethernet, tracks at 20 Hz"
+  },
+  {
+   "from": "radar-cl",
+   "to": "edge",
+   "kind": "data",
+   "label": "CAN-FD"
+  },
+  {
+   "from": "radar-cr",
+   "to": "edge",
+   "kind": "data",
+   "label": "CAN-FD"
+  },
+  {
+   "from": "thermal",
+   "to": "edge",
+   "kind": "data",
+   "label": "USB 3, 640x512 at 30 Hz"
+  },
+  {
+   "from": "cam",
+   "to": "edge",
+   "kind": "data",
+   "label": "GMSL2"
+  },
+  {
+   "from": "gnss",
+   "to": "edge",
+   "kind": "data",
+   "label": "UART, RTCM in and NMEA out"
+  },
+  {
+   "from": "imu",
+   "to": "edge",
+   "kind": "data",
+   "label": "SPI at 200 Hz plus J1939 CAN"
+  },
+  {
+   "from": "uwb",
+   "to": "edge",
+   "kind": "data",
+   "label": "SPI, ranges at 10 Hz"
+  },
+  {
+   "from": "edge",
+   "to": "modem",
+   "kind": "data",
+   "label": "MQTT over LTE"
+  },
+  {
+   "from": "edge",
+   "to": "lora",
+   "kind": "data",
+   "label": "20 byte heartbeat at 1 Hz"
+  },
+  {
+   "from": "edge",
+   "to": "hud",
+   "kind": "data",
+   "label": "HDMI, corridor render"
+  },
+  {
+   "from": "edge",
+   "to": "haptic",
+   "kind": "data",
+   "label": "Alert level"
+  }
  ],
  "infrastructure": [
   {
-   "id": "rsu", "label": "Roadside unit", "place": "ramp-heads", "count": 5,
-   "height_m": 12, "colour": "#6FA8C8", "unit_inr": 150000, "coverage_m": 900,
-   "role": "Private LTE cell, C-V2X relay and edge cache on an existing lighting mast. Height and mains power are exactly why we route through these rather than peer to peer."
+   "id": "rsu",
+   "label": "Roadside unit",
+   "place": "ramp-heads",
+   "count": 5,
+   "height_m": 12,
+   "colour": "#6FA8C8",
+   "unit_inr": 90000,
+   "coverage_m": 900,
+   "role": "Private LTE cell and C-V2X relay on an existing lighting mast. Fleet-coordination compute stays on the central twin server rather than duplicated at every mast, which is most of what the previous price was paying for."
   },
   {
-   "id": "met", "label": "Micro-met station", "place": "met-stations", "count": 0,
-   "height_m": 10, "colour": "#4FBE8B", "unit_inr": 100000, "coverage_m": 0,
+   "id": "met",
+   "label": "Micro-met station",
+   "place": "met-stations",
+   "count": 0,
+   "height_m": 10,
+   "colour": "#4FBE8B",
+   "unit_inr": 70000,
+   "coverage_m": 0,
    "role": "Forward-scatter visibility sensor with temperature, dew point and wind. Calibrated ground truth for the visibility field and the fog nowcaster."
   },
   {
-   "id": "rtk", "label": "RTK base station", "place": "crest", "count": 1,
-   "height_m": 8, "colour": "#E0A93B", "unit_inr": 150000, "coverage_m": 1600,
-   "role": "A surveyed control point broadcasting RTCM corrections over NTRIP. One base serves the whole complex."
+   "id": "rtk",
+   "label": "RTK base station",
+   "place": "crest",
+   "count": 1,
+   "height_m": 8,
+   "colour": "#E0A93B",
+   "unit_inr": 120000,
+   "coverage_m": 1600,
+   "role": "A surveyed control point broadcasting RTCM corrections over NTRIP, run as software on the twin server rather than a dedicated caster appliance."
   },
   {
-   "id": "uwb-anchor", "label": "UWB anchor", "place": "zones", "count": 8,
-   "height_m": 6, "colour": "#9B7FD4", "unit_inr": 7500, "coverage_m": 60,
+   "id": "uwb-anchor",
+   "label": "UWB anchor",
+   "place": "zones",
+   "count": 8,
+   "height_m": 6,
+   "colour": "#9B7FD4",
+   "unit_inr": 6000,
+   "coverage_m": 60,
    "role": "Fixed ranging reference at tip points, loading bays and the workshop gate. The places where centimetres matter and GNSS is most blocked."
   }
  ],
  "rover": {
   "name": "FogTwin rover prototype",
-  "length_m": 0.34, "width_m": 0.22, "height_m": 0.16,
+  "length_m": 0.34,
+  "width_m": 0.22,
+  "height_m": 0.16,
   "budget_inr": 25000,
   "note": "Publishes the same VehicleState schema as a production dumper, so it joins the live twin beside the simulated fleet with no special casing anywhere in the server."
  },
  "tour": [
   {
-   "view": "dumper", "focus": null, "title": "The retrofit kit",
+   "view": "dumper",
+   "focus": null,
+   "title": "The retrofit kit",
    "body": "Nothing here replaces the machine. Every part bolts onto an existing dumper inside one shift, with no OEM cooperation and no change to the driveline. NMDC will not re-fleet a hundred 100 tonne trucks, so the kit has to arrive as a bolt-on."
   },
   {
-   "view": "dumper", "focus": "radar-lr", "title": "Start with the physics",
+   "view": "dumper",
+   "focus": "radar-lr",
+   "title": "Start with the physics",
    "body": "The forward radar is the only sensor on this machine that still sees a dumper at 200 m in dense fog. 77 GHz is a 3.9 mm wavelength against a 10 micrometre droplet, around 390 times larger, so it passes through almost untouched. Everything optical on this truck loses to that droplet."
   },
   {
-   "view": "dumper", "focus": "radar-cl", "title": "Cover the geometry that kills",
+   "view": "dumper",
+   "focus": "radar-cl",
+   "title": "Cover the geometry that kills",
    "body": "Two corner units at the rear quarters. Mine accident statistics are dominated by two cases: rear-end on a ramp, and reversing over a light vehicle or a person at the tip. Both happen where the operator has no view even on a clear day."
   },
   {
-   "view": "dumper", "focus": "gnss", "title": "The sensor that replaces sight",
+   "view": "dumper",
+   "focus": "gnss",
+   "title": "The sensor that replaces sight",
    "body": "RTK-GNSS on the highest point of the canopy gives two to three centimetres of absolute position. The road was surveyed once, and the truck knows where it is to a few centimetres. That pair is what makes the corridor renderable with no camera involved at all."
   },
   {
-   "view": "dumper", "focus": "edge", "title": "Decisions close on the vehicle",
+   "view": "dumper",
+   "focus": "edge",
+   "title": "Decisions close on the vehicle",
    "body": "The edge node fuses everything, scores collision risk, renders the HUD and caches the twin. Nothing safety-critical waits for the network. Lose comms and you lose foresight, meaning knowledge of the truck around the bend. You never lose braking."
   },
   {
-   "view": "dumper", "focus": "hud", "title": "What the operator actually gets",
+   "view": "dumper",
+   "focus": "hud",
+   "title": "What the operator actually gets",
    "body": "A sunlight-readable synthetic-vision display and a haptic transducer in the seat. Cab noise runs 85 to 95 dB with ear protection on, so a warning that is only audible is a warning that gets missed."
   },
   {
-   "view": "site", "focus": null, "title": "The mine side",
+   "view": "site",
+   "focus": null,
+   "title": "The mine side",
    "body": "Roadside units on existing lighting masts, micro-met stations spread across the elevation range, one RTK base, and UWB anchors at the tips and loading bays. All of it placed on the real Bailadila ridge against the actual haul network."
   },
   {
-   "view": "rover", "focus": null, "title": "What we actually built",
+   "view": "rover",
+   "focus": null,
+   "title": "What we actually built",
    "body": "We do not have a 100 tonne dumper. We have instrumented rovers running the identical message schema, so they appear in the same twin as the simulated fleet. Every part maps to a production counterpart, and every line of software above the driver layer is unchanged."
   },
   {
-   "view": "wiring", "focus": null, "title": "Power, data and cost",
+   "view": "wiring",
+   "focus": null,
+   "title": "Power, data and cost",
    "body": "One isolated supply off the machine 24 V bus, one compute hub, and a bill of materials near two lakh per vehicle. Against a single day of lost monsoon production at 37 MTPA, that is the easiest number in this project to defend."
   }
  ]

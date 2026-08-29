@@ -818,6 +818,7 @@ function showDetail(c) {
       ${cov ? `<div><div class="k">Range</div><div class="v">${cov.range_m} m</div></div>
       <div><div class="k">Field of view</div><div class="v">${cov.az_deg ? cov.az_deg + '&deg; az' : cov.kind}</div></div>` : ''}
     </div>
+    ${c.costnote ? `<div class="lbl">Why it is cheaper here</div><p class="fogline" style="border-left-color:var(--ok)">${c.costnote}</p>` : ''}
     <div class="lbl">On the rover we built</div><p>${c.rover}</p>`;
 }
 

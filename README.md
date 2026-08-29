@@ -215,7 +215,7 @@ scene and the cost table cannot drift apart.
 | **Site infrastructure** | Roadside units, met stations, the RTK base and UWB anchors placed on the real Bailadila ridge against the actual haul network, with radio and ranging coverage on demand. |
 | **Rover prototype** | The machine we did build, at true scale, with every part mapped to the production component it stands in for. One button frames it beside a true-scale dumper envelope, because the size gap is the honest part. |
 | **Blind spots** | On the dumper view, the arcs no sensor reaches, drawn on the ground. Two modes: *any sensor* and *in fog*. |
-| **Wiring &amp; BOM** | Power and data topology — one isolated supply, one compute hub — plus the bill of materials. Currently **&#8377;2,19,500** per dumper at **85 W** peak draw, and **&#8377;80,45,000** for a 30-dumper pilot including site infrastructure. |
+| **Wiring &amp; BOM** | Power and data topology — one isolated supply, one compute hub — plus the bill of materials. Currently **&#8377;1,48,500** per dumper at **85 W** peak draw, and **&#8377;54,23,000** for a 30-dumper pilot including site infrastructure — a ~32% cut from the first pass, by re-pricing eval-kit and tactical-grade parts as their production equivalents. The forward 77 GHz radar is untouched; click any changed component on the page for the swap and why it does not cost accuracy. |
 
 ### The blind spots are shown, not hidden
 
