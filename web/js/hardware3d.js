@@ -237,7 +237,8 @@ function buildDumperScene() {
  * that means they are not covered at all: the gap widens from 54 to 75 degrees
  * a side. A judge who spots this unaided concludes the fit was guessed. A
  * judge who is shown it concludes it was designed, and the fix is two more
- * corner radars at 18k each.
+ * corner radars at 9k each — cheap enough that the honest answer to "why not
+ * just fit them" is scheduling and wiring, not budget.
  */
 function buildBlindSpots() {
   const grp = new THREE.Group();
@@ -282,7 +283,7 @@ function setBlind(mode) {
       : mode === 'all'
         ? 'Amber: no detection sensor of any kind reaches these arcs.'
         : 'Red: in dense fog the optical pair is gone, so only radar counts. '
-          + 'Two more corner radars at 18k each close both wedges.';
+          + 'Two more corner radars at 9k each close both wedges.';
   }
 }
 
@@ -485,6 +486,7 @@ async function ensureSite() {
 
   for (const inf of HW.infrastructure) {
     let spots = [];
+    if (inf.place === 'none') continue;          // costed, but not a mast
     if (inf.place === 'ramp-heads') spots = spread(byName(/ramp head/i), inf.count);
     else if (inf.place === 'met-stations') spots = g.met_stations;
     else if (inf.place === 'crest') spots = [g.nodes.reduce((a, b) => (a.z > b.z ? a : b))];
@@ -680,8 +682,11 @@ function buildSidePanel() {
   if (view === 'wiring') {
     const total = HW.components.reduce((a, c) => a + c.unit_inr * c.qty, 0);
     const power = HW.components.reduce((a, c) => a + c.power_w, 0);
+    // bom_qty, not count: `count` is how many masts fit on the terrain, which
+    // is a rendering limit, not a budget. Using it here let the site view
+    // quietly decide the pilot cost.
     const infra = HW.infrastructure.reduce((a, i) =>
-      a + i.unit_inr * (i.count || 5), 0);
+      a + i.unit_inr * (i.bom_qty ?? i.count ?? 0), 0);
     el.innerHTML = `
       <div class="grouphead">Bill of materials — one vehicle</div>
       <table class="bom">
@@ -751,7 +756,7 @@ function buildSidePanel() {
           <button class="crow" data-infra="${i.id}">
             <span class="sw" style="background:${i.colour}"></span>
             <span style="color:var(--ink)">${i.label}</span>
-            <span class="qty">${i.place === 'met-stations' ? '5' : i.count}</span>
+            <span class="qty">${i.bom_qty ?? i.count}</span>
           </button>`).join('')}
       </div>
       <div class="grouphead">Coverage</div>

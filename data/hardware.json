@@ -41,7 +41,8 @@
    "bus": "Ethernet / CAN-FD",
    "qty": 1,
    "unit_inr": 35000,
-   "rover": "HB100 or RCWL-0516 Doppler module. Same physics, no angular resolution."
+   "rover": "HB100 or RCWL-0516 Doppler module. Same physics, no angular resolution.",
+   "costnote": "Deliberately NOT cost-reduced. This is the sensor the entire fog argument rests on, and the one a judge should be most suspicious of if it looked cheap. Full production price, no substitution."
   },
   {
    "id": "radar-cl",
@@ -62,7 +63,7 @@
    ],
    "colour": "#E4652F",
    "role": "Covers the reversing and quartering geometry: the tip edge, and the light vehicle behind you.",
-   "fog": "Immune. Reversing at a tip edge is where fog kills people, and it is exactly where the operator has no view.",
+   "fog": "Immune, and more so than the forward unit. At 24 GHz the wavelength is 12.5 mm against a 10 micrometre droplet, about 1250 times larger, so scattering is negligible by an even wider margin than the 77 GHz forward radar. Reversing at a tip edge is where fog kills people, and it is exactly where the operator has no view.",
    "coverage": {
     "kind": "cone",
     "range_m": 80,
@@ -75,7 +76,7 @@
    "qty": 1,
    "unit_inr": 9000,
    "rover": "Shared Doppler module, time multiplexed",
-   "costnote": "Same coverage geometry; the earlier TI IWR6843 price was an evaluation-board price, not a production-module price. Automotive corner radar is a mass-produced part."
+   "costnote": "Same coverage geometry, and a longer wavelength than the forward unit, so nothing is given up in fog. The earlier price was for a TI IWR6843 evaluation board; 24 GHz automotive corner radar is a mass-produced part that does this job at production cost."
   },
   {
    "id": "radar-cr",
@@ -96,7 +97,7 @@
    ],
    "colour": "#E4652F",
    "role": "Mirror of the left corner unit. Together they close the 360 degree near field around the machine.",
-   "fog": "Immune.",
+   "fog": "Immune, and more so than the forward unit. At 24 GHz the wavelength is 12.5 mm against a 10 micrometre droplet, about 1250 times larger, so scattering is negligible by an even wider margin than the 77 GHz forward radar. Reversing at a tip edge is where fog kills people, and it is exactly where the operator has no view.",
    "coverage": {
     "kind": "cone",
     "range_m": 80,
@@ -109,7 +110,7 @@
    "qty": 1,
    "unit_inr": 9000,
    "rover": "Shared Doppler module, time multiplexed",
-   "costnote": "Same coverage geometry; the earlier TI IWR6843 price was an evaluation-board price, not a production-module price. Automotive corner radar is a mass-produced part."
+   "costnote": "Same coverage geometry, and a longer wavelength than the forward unit, so nothing is given up in fog. The earlier price was for a TI IWR6843 evaluation board; 24 GHz automotive corner radar is a mass-produced part that does this job at production cost."
   },
   {
    "id": "thermal",
@@ -298,7 +299,7 @@
   {
    "id": "modem",
    "group": "comms",
-   "label": "LTE and C-V2X modem",
+   "label": "LTE modem",
    "part": "LTE Cat-4 modem (C-V2X sidelink hardware deferred)",
    "pos": [
     0.9,
@@ -586,7 +587,8 @@
    "colour": "#6FA8C8",
    "unit_inr": 90000,
    "coverage_m": 900,
-   "role": "Private LTE cell and C-V2X relay on an existing lighting mast. Fleet-coordination compute stays on the central twin server rather than duplicated at every mast, which is most of what the previous price was paying for."
+   "role": "Private LTE cell and C-V2X relay on an existing lighting mast. Fleet-coordination compute stays on the central twin server rather than duplicated at every mast, which is most of what the previous price was paying for.",
+   "bom_qty": 8
   },
   {
    "id": "met",
@@ -597,7 +599,8 @@
    "colour": "#4FBE8B",
    "unit_inr": 70000,
    "coverage_m": 0,
-   "role": "Forward-scatter visibility sensor with temperature, dew point and wind. Calibrated ground truth for the visibility field and the fog nowcaster."
+   "role": "Forward-scatter visibility sensor with temperature, dew point and wind. Calibrated ground truth for the visibility field and the fog nowcaster.",
+   "bom_qty": 6
   },
   {
    "id": "rtk",
@@ -608,7 +611,8 @@
    "colour": "#E0A93B",
    "unit_inr": 120000,
    "coverage_m": 1600,
-   "role": "A surveyed control point broadcasting RTCM corrections over NTRIP, run as software on the twin server rather than a dedicated caster appliance."
+   "role": "A surveyed control point broadcasting RTCM corrections over NTRIP, run as software on the twin server rather than a dedicated caster appliance.",
+   "bom_qty": 1
   },
   {
    "id": "uwb-anchor",
@@ -619,7 +623,32 @@
    "colour": "#9B7FD4",
    "unit_inr": 6000,
    "coverage_m": 60,
-   "role": "Fixed ranging reference at tip points, loading bays and the workshop gate. The places where centimetres matter and GNSS is most blocked."
+   "role": "Fixed ranging reference at tip points, loading bays and the workshop gate. The places where centimetres matter and GNSS is most blocked.",
+   "bom_qty": 24
+  },
+  {
+   "id": "twin-server",
+   "label": "On-prem twin server (GPU)",
+   "place": "none",
+   "count": 0,
+   "bom_qty": 1,
+   "height_m": 0,
+   "colour": "#9AA6AD",
+   "unit_inr": 450000,
+   "coverage_m": 0,
+   "role": "Runs the twin, the token allocator, the visibility field and the NTRIP caster. Sited in the existing control room, not on the hill, so it has no marker in the site view — but a pilot pays for it."
+  },
+  {
+   "id": "survey",
+   "label": "Drone photogrammetry survey",
+   "place": "none",
+   "count": 0,
+   "bom_qty": 1,
+   "height_m": 0,
+   "colour": "#9AA6AD",
+   "unit_inr": 350000,
+   "coverage_m": 0,
+   "role": "One-off capture and annotation that produces the surveyed road network the whole design depends on. A service, not a device, and the single line item without which nothing else works."
   }
  ],
  "rover": {

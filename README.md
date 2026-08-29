@@ -215,7 +215,7 @@ scene and the cost table cannot drift apart.
 | **Site infrastructure** | Roadside units, met stations, the RTK base and UWB anchors placed on the real Bailadila ridge against the actual haul network, with radio and ranging coverage on demand. |
 | **Rover prototype** | The machine we did build, at true scale, with every part mapped to the production component it stands in for. One button frames it beside a true-scale dumper envelope, because the size gap is the honest part. |
 | **Blind spots** | On the dumper view, the arcs no sensor reaches, drawn on the ground. Two modes: *any sensor* and *in fog*. |
-| **Wiring &amp; BOM** | Power and data topology — one isolated supply, one compute hub — plus the bill of materials. Currently **&#8377;1,48,500** per dumper at **85 W** peak draw, and **&#8377;54,23,000** for a 30-dumper pilot including site infrastructure — a ~32% cut from the first pass, by re-pricing eval-kit and tactical-grade parts as their production equivalents. The forward 77 GHz radar is untouched; click any changed component on the page for the swap and why it does not cost accuracy. |
+| **Wiring &amp; BOM** | Power and data topology — one isolated supply, one compute hub — plus the bill of materials. Currently **&#8377;1,48,500** per dumper at **85 W** peak draw, and **&#8377;66,59,000** for a 30-dumper pilot including site infrastructure, the twin server and the survey — a ~32% cut on the kit and ~31% on the pilot, by re-pricing eval-kit and tactical-grade parts as their production equivalents. The forward 77 GHz radar is untouched; click any changed component on the page for the swap and why it does not cost accuracy. |
 
 ### The blind spots are shown, not hidden
 
@@ -231,10 +231,11 @@ Both the hardware page and the cab HUD read the same module, so the coverage
 shown to a judge and the coverage the operator is flying on cannot disagree —
 add a fourth radar to `data/hardware.json` and both surfaces update together.
 
-Say this before a judge finds it: two more corner radars at &#8377;18k each close
+Say this before a judge finds it: two more corner radars at &#8377;9k each close
 both wedges, and the reason they are not in the phase-one fit is that the two
 geometries that dominate mine accident statistics — rear-end on a ramp and
-reversing at a tip — are already covered.
+reversing at a tip — are already covered. At that price the honest answer to
+"so why not just fit them" is install time and harness routing, not budget.
 
 **Guided tour** runs nine steps across all four views with the narration written
 out, so it can be clicked through while presenting; arrow keys step, Escape
