@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# DEM tile cache — rebuilt by scripts/fetch_dem.py, not needed in the repo
+data/dem/tiles/
+
+# editor/OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# local experiment logs (data/experiment.json itself IS committed — it's what /results reads)
+data/experiment_run.log

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FogTwin — Cab HUD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+<style>
+  body { display: flex; flex-direction: column; }
+  .hudwrap { position: relative; flex: 1; min-height: 0; background: #06090B; }
+  #scene { position: absolute; inset: 0; }
+  #scene canvas { display: block; }
+
+  #banner {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 3;
+    padding: 13px 20px; font-size: 21px; font-weight: 700; letter-spacing: -.01em;
+    background: rgba(14,17,20,.82); border-bottom: 2px solid var(--rule);
+    display: flex; align-items: center; gap: 14px;
+  }
+  #banner .lvl {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .16em;
+    text-transform: uppercase; padding: 4px 10px; border: 1px solid currentColor;
+  }
+  #banner.caution   { border-bottom-color: var(--warn); color: var(--warn); }
+  #banner.warning   { border-bottom-color: var(--crit); color: var(--crit); }
+  #banner.intervene { background: var(--crit); color: #fff; border-bottom-color: #fff; }
+  #banner.advisory  { border-bottom-color: var(--slate); color: var(--slate); }
+  #banner.info      { color: var(--ink-2); }
+  @keyframes flash { 50% { opacity: .45; } }
+  #banner.warning, #banner.intervene { animation: flash 1s steps(1) infinite; }
+  @media (prefers-reduced-motion: reduce) { #banner { animation: none !important; } }
+
+  .panecap {
+    position: absolute; top: 62px; z-index: 3;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+    padding: 6px 12px; background: rgba(14,17,20,.85);
+  }
+  #pane-left  { left: 0; color: var(--crit); border-left: 3px solid var(--crit); }
+  #pane-right { left: 50%; color: var(--ok); border-left: 3px solid var(--ok); }
+
+  #strip {
+    display: flex; align-items: stretch; border-top: 1px solid var(--rule);
+    background: var(--panel); flex: 0 0 auto;
+  }
+  #strip > div { padding: 11px 20px; border-right: 1px solid var(--rule); }
+  #strip .k { font-family: var(--mono); font-size: 9px; letter-spacing: .15em;
+              text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
+  #strip .v { font-size: 26px; font-weight: 700; letter-spacing: -.03em;
+              font-variant-numeric: tabular-nums; line-height: 1; }
+  #strip .v small { font-size: 12px; color: var(--ink-3); font-weight: 500; }
+  .grow { flex: 1; }
+  #token .v.granted { color: var(--ok); }
+  #token .v.held    { color: var(--warn); }
+  #vis .v.bad       { color: var(--crit); }
+  #mode .v.deg      { color: var(--warn); }
+
+  #neigh {
+    position: absolute; top: 62px; right: 0; width: 268px; z-index: 3;
+    background: rgba(14,17,20,.86); border-left: 1px solid var(--rule);
+    font-family: var(--mono); font-size: 11px; max-height: calc(100% - 74px);
+    overflow-y: auto;
+  }
+  #neigh .row { padding: 8px 13px; border-bottom: 1px solid var(--rule); line-height: 1.5; }
+  #neigh .row.corner { border-left: 3px solid var(--accent); }
+  #neigh .id { color: var(--ink); }
+  #neigh .meta { color: var(--ink-3); }
+  #neigh .tag { color: var(--accent); font-size: 9px; letter-spacing: .12em;
+                text-transform: uppercase; }
+
+  .cabpick { display: flex; align-items: center; gap: 8px; }
+  .cabpick select { font-size: 12px; padding: 5px 8px; min-width: 96px; }
+  #cabmeta { font-variant-numeric: tabular-nums; }
+  #cabmeta .alertdot { display: inline-block; width: 7px; height: 7px;
+                       border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+
+  /* plan-view radar picture-in-picture */
+  #pipwrap {
+    position: absolute; right: 12px; bottom: 12px; z-index: 3; width: 236px;
+    background: rgba(14,17,20,.9); border: 1px solid var(--rule);
+  }
+  #pipwrap.off { display: none; }
+  .piphead {
+    display: flex; justify-content: space-between; padding: 7px 10px;
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid var(--rule);
+  }
+  #piprange { color: var(--accent); }
+  #pip { display: block; width: 100%; height: auto; cursor: pointer; }
+  .pipkey {
+    display: flex; gap: 10px; padding: 6px 10px; border-top: 1px solid var(--rule);
+    font-family: var(--mono); font-size: 9px; color: var(--ink-3);
+  }
+  .pipkey i.d { display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+                margin-right: 4px; vertical-align: middle; }
+  .pipkey i.solid { background: var(--ok); }
+  .pipkey i.hollow { border: 1px solid var(--slate); }
+  .pipkey i.blind { background: rgba(228,87,79,.45); border-radius: 1px; }
+
+  /* time-to-collision cards */
+  #neigh .row .hdr { display: flex; justify-content: space-between; align-items: baseline; }
+  #neigh .row .rng { color: var(--ink-3); }
+  #neigh .row .bar { height: 3px; background: var(--rule); margin: 6px 0 5px; }
+  #neigh .row .bar i { display: block; height: 100%; background: var(--ink-3); }
+  #neigh .row.lv-caution   { border-left: 3px solid var(--warn); }
+  #neigh .row.lv-caution   .bar i { background: var(--warn); }
+  #neigh .row.lv-caution   .id { color: var(--warn); }
+  #neigh .row.lv-warning   { border-left: 3px solid var(--crit); }
+  #neigh .row.lv-warning   .bar i { background: var(--crit); }
+  #neigh .row.lv-warning   .id { color: var(--crit); }
+  #neigh .row.lv-intervene { border-left: 3px solid var(--crit); background: rgba(228,87,79,.14); }
+  #neigh .row.lv-intervene .bar i { background: var(--crit); }
+  #neigh .row.lv-intervene .id { color: #fff; }
+  #neigh .row.passing { opacity: .55; }
+  #neigh .row .ttc { font-variant-numeric: tabular-nums; }
+
+  .hint {
+    position: absolute; left: 14px; bottom: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 10px; color: var(--ink-3);
+    background: rgba(14,17,20,.7); padding: 5px 9px; border: 1px solid var(--rule);
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Cab <span>HUD</span></div>
+  <label class="cabpick">
+    <span class="sub">cab</span>
+    <select id="cabsel" title="Switch to another dumper's cab"></select>
+  </label>
+  <div class="sub" id="cabmeta">&mdash;</div>
+  <div class="spacer"></div>
+  <a class="sub" href="/hardware" style="color:var(--slate);text-decoration:none;margin-right:8px">hardware</a>
+  <button id="pipbtn" class="hot" title="Plan-view radar picture-in-picture">Radar PiP&nbsp;[R]</button>
+  <button id="prevcab" title="Previous cab">&#8592;</button>
+  <button id="nextcab" title="Next cab">&#8594;</button>
+  <button id="splitbtn">Split with windscreen &nbsp;[V]</button>
+  <div class="conn down" id="conn">connecting</div>
+</div>
+
+<div class="hudwrap">
+  <div id="scene"></div>
+  <div id="banner" class="info"><span class="lvl">info</span><span id="reason">waiting for twin</span></div>
+  <div class="panecap" id="pane-left" style="display:none"></div>
+  <div class="panecap" id="pane-right" style="display:none"></div>
+  <div id="neigh"></div>
+  <div id="pipwrap">
+    <div class="piphead">
+      <span>Plan radar</span>
+      <span id="piprange">250 m</span>
+    </div>
+    <canvas id="pip" width="460" height="460" title="Click to change range"></canvas>
+    <div class="pipkey">
+      <span><i class="d solid"></i>sensed</span>
+      <span><i class="d hollow"></i>twin only</span>
+      <span><i class="d blind"></i>no radar</span>
+    </div>
+  </div>
+  <div class="hint">Road drawn from surveyed geometry &mdash; not from a camera.</div>
+</div>
+
+<div id="strip">
+  <div><div class="k">Speed</div><div class="v" id="spd">0 <small>km/h</small></div></div>
+  <div><div class="k">Advisory limit</div><div class="v" id="adv">&mdash; <small>km/h</small></div></div>
+  <div id="vis"><div class="k">Visibility</div><div class="v">&mdash; <small>m</small></div></div>
+  <div id="token"><div class="k">Zone token</div><div class="v">&mdash;</div></div>
+  <div class="grow"><div class="k">Segment</div><div class="v" id="seg" style="font-size:18px">&mdash;</div></div>
+  <div id="mode"><div class="k">Mode</div><div class="v">A</div></div>
+</div>
+
+<script type="module" src="/static/js/hud3d.js"></script>
+</body>
+</html>

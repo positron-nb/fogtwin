@@ -1,0 +1,20 @@
+{
+  "name": "Bailadila range \u2014 Deposit 14 / 11C, Kirandul",
+  "source": "AWS Open Data Terrain Tiles (terrarium), SRTM/ASTER derived",
+  "licence": "public domain / CC0 source data",
+  "zoom": 13,
+  "width": 480,
+  "height": 480,
+  "north": 18.735,
+  "south": 18.585,
+  "west": 81.155,
+  "east": 81.32,
+  "span_x_m": 17402.3,
+  "span_y_m": 16698.0,
+  "cell_x_m": 36.25,
+  "cell_y_m": 34.79,
+  "min_m": 423,
+  "max_m": 1266,
+  "dtype": "int16",
+  "order": "row-major, row 0 = north edge"
+}

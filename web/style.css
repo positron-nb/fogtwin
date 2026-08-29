@@ -1,0 +1,78 @@
+/* FogTwin operator surfaces. Dark by default — both screens live in a cab or a
+   dim control room, and a bright UI at 3 a.m. on a night shift is a hazard. */
+
+:root {
+  --bg: #0E1114;
+  --panel: #171B1F;
+  --panel-2: #1F252A;
+  --rule: #2C343A;
+  --ink: #E4E9EC;
+  --ink-2: #A9B4BB;
+  --ink-3: #6E7A82;
+  --accent: #E4652F;
+  --slate: #6FA8C8;
+  --ok: #4FBE8B;
+  --warn: #E0A93B;
+  --crit: #E4574F;
+  --road: #39434A;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --disp: "Archivo", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; height: 100%;
+  background: var(--bg); color: var(--ink);
+  font-family: var(--disp);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+.mono { font-family: var(--mono); }
+
+.topbar {
+  display: flex; align-items: center; gap: 18px;
+  padding: 10px 18px; border-bottom: 1px solid var(--rule);
+  background: var(--panel);
+}
+.brand { font-weight: 700; letter-spacing: -.02em; font-size: 15px; }
+.brand span { color: var(--accent); }
+.topbar .sub {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.spacer { flex: 1; }
+
+.conn {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 9px;
+  border: 1px solid currentColor; color: var(--ok);
+}
+.conn.down { color: var(--crit); }
+
+button, select {
+  font-family: var(--mono); font-size: 11px;
+  background: var(--panel-2); color: var(--ink);
+  border: 1px solid var(--rule); padding: 6px 11px; cursor: pointer;
+}
+button:hover { border-color: var(--accent); color: var(--accent); }
+button.hot { border-color: var(--accent); color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.pill {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .05em;
+  padding: 2px 8px; border-radius: 9px; border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.lv-info      { color: var(--ink-3); }
+.lv-advisory  { color: var(--slate); }
+.lv-caution   { color: var(--warn); }
+.lv-warning   { color: var(--crit); }
+.lv-intervene { color: #fff; background: var(--crit); border-color: var(--crit); }
+
+.panel-title {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-3);
+  padding: 11px 14px 8px; border-bottom: 1px solid var(--rule);
+}

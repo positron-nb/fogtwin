@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FogTwin — Hardware</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+<style>
+  .layout { display: grid; grid-template-columns: 1fr 356px; height: calc(100% - 45px); }
+  .stagewrap { position: relative; min-width: 0; background: #0B0E10; }
+  #scene { position: absolute; inset: 0; }
+  #scene canvas { display: block; cursor: grab; }
+  #scene canvas:active { cursor: grabbing; }
+
+  .viewbar { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px;
+             flex-wrap: wrap; z-index: 2; }
+  .viewbar button.on { border-color: var(--accent); color: var(--accent); }
+
+  .toggles {
+    position: absolute; top: 12px; right: 12px; z-index: 2;
+    background: rgba(16,20,23,.9); border: 1px solid var(--rule); padding: 10px 12px;
+    font-family: var(--mono); font-size: 10.5px; line-height: 1.9; color: var(--ink-2);
+    min-width: 196px; max-width: 210px;
+  }
+  .toggles .th { font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
+                 color: var(--ink-3); margin-bottom: 4px; }
+  .toggles label { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+  .toggles input { accent-color: var(--accent); margin: 0; }
+  .toggles button { font-size: 10px; padding: 4px 7px; }
+  .toggles button.on { border-color: var(--accent); color: var(--accent); }
+  .toggles .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; }
+
+  /* guided tour */
+  #tour {
+    position: absolute; left: 12px; bottom: 12px; right: 12px; z-index: 3;
+    background: rgba(14,17,20,.94); border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent); padding: 13px 16px;
+    display: none; gap: 16px; align-items: flex-start;
+  }
+  #tour.on { display: flex; }
+  #tour .num { font-family: var(--mono); font-size: 10px; letter-spacing: .14em;
+               color: var(--accent); white-space: nowrap; padding-top: 3px; }
+  #tour .body { flex: 1; min-width: 0; }
+  #tour h4 { font-family: var(--disp); font-size: 15px; margin: 0 0 5px; font-weight: 600; }
+  #tour p { margin: 0; font-family: var(--disp); font-size: 12.5px; line-height: 1.55;
+            color: var(--ink-2); max-width: 78ch; }
+  #tour .nav { display: flex; gap: 6px; align-items: center; }
+
+  aside { border-left: 1px solid var(--rule); background: var(--panel); overflow-y: auto; }
+
+  .grouphead { font-family: var(--mono); font-size: 9px; letter-spacing: .16em;
+               text-transform: uppercase; color: var(--ink-3);
+               padding: 12px 14px 5px; }
+  .clist { display: flex; flex-direction: column; }
+  .crow { display: flex; align-items: center; gap: 9px; padding: 7px 14px;
+          font-family: var(--mono); font-size: 11px; color: var(--ink-2);
+          cursor: pointer; border-left: 2px solid transparent; background: none;
+          border-top: 0; border-right: 0; border-bottom: 0; text-align: left; width: 100%; }
+  .crow:hover { color: var(--ink); background: rgba(255,255,255,.03); }
+  .crow.sel { border-left-color: var(--accent); background: rgba(228,101,47,.12);
+              color: var(--ink); }
+  .crow .sw { width: 9px; height: 9px; border-radius: 2px; flex: 0 0 auto; }
+  .crow .qty { margin-left: auto; color: var(--ink-3); }
+
+  #detail { border-top: 1px solid var(--rule); padding: 14px; }
+  #detail h3 { font-size: 15px; margin: 0 0 3px; font-weight: 600; }
+  #detail .part { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3);
+                  margin-bottom: 12px; }
+  #detail .lbl { font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+                 text-transform: uppercase; color: var(--ink-3); margin: 12px 0 4px; }
+  #detail p { margin: 0; font-size: 12.5px; line-height: 1.55; color: var(--ink-2); }
+  #detail .fogline { border-left: 2px solid var(--accent); padding-left: 10px; }
+  #detail .specs { display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+                   background: var(--rule); border: 1px solid var(--rule); margin-top: 12px; }
+  #detail .specs div { background: var(--panel); padding: 8px 10px; }
+  #detail .specs .k { font-family: var(--mono); font-size: 8.5px; letter-spacing: .13em;
+                      text-transform: uppercase; color: var(--ink-3); }
+  #detail .specs .v { font-family: var(--mono); font-size: 12px; color: var(--ink);
+                      margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+  table.bom { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 10.5px; }
+  table.bom th { font-size: 8.5px; letter-spacing: .13em; text-transform: uppercase;
+                 color: var(--ink-3); text-align: left; padding: 8px 14px;
+                 border-bottom: 1px solid var(--rule); font-weight: 600; }
+  table.bom td { padding: 6px 14px; border-bottom: 1px solid var(--rule); color: var(--ink-2); }
+  table.bom td.r { text-align: right; font-variant-numeric: tabular-nums; }
+  table.bom tr.total td { color: var(--accent); border-bottom: 0; padding-top: 9px; }
+  table.bom tr:hover td { background: rgba(255,255,255,.03); }
+
+  #wiring { display: none; position: absolute; inset: 0; overflow: auto;
+            background: #0B0E10; z-index: 4; padding: 22px; }
+  #wiring.on { display: block; }
+  #wiring svg { display: block; margin: 0 auto; max-width: 100%; }
+  .legend { position: absolute; left: 12px; bottom: 12px; z-index: 2;
+            background: rgba(16,20,23,.88); border: 1px solid var(--rule);
+            padding: 9px 12px; font-family: var(--mono); font-size: 10px;
+            line-height: 1.8; color: var(--ink-2); }
+  .legend.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Bailadila <span>FogTwin</span></div>
+  <div class="sub">Hardware &middot; retrofit kit</div>
+  <div class="spacer"></div>
+  <a class="sub" href="/control" style="color:var(--slate);text-decoration:none">control room</a>
+  <a class="sub" href="/hud" style="color:var(--slate);text-decoration:none">cab hud</a>
+  <button id="tourbtn" class="hot">Guided tour</button>
+</div>
+
+<div class="layout">
+  <div class="stagewrap">
+    <div id="scene"></div>
+
+    <div class="viewbar">
+      <button data-view="dumper" class="on">Dumper kit</button>
+      <button data-view="site">Site infrastructure</button>
+      <button data-view="rover">Rover prototype</button>
+      <button data-view="wiring">Wiring &amp; BOM</button>
+      <button id="explode">Exploded view</button>
+    </div>
+
+    <div class="toggles" id="toggles">
+      <div class="th">Sensor coverage</div>
+      <div id="covlist"></div>
+    </div>
+
+    <div class="legend" id="legend">
+      <div><b>Click any component</b> in the scene or the list</div>
+      <div>drag to orbit &middot; wheel to zoom &middot; shift-drag to pan</div>
+    </div>
+
+    <div id="wiring"></div>
+
+    <div id="tour">
+      <div class="num" id="tournum">01 / 09</div>
+      <div class="body">
+        <h4 id="tourtitle">&mdash;</h4>
+        <p id="tourbody">&mdash;</p>
+      </div>
+      <div class="nav">
+        <button id="tourprev">&#8592;</button>
+        <button id="tournext">&#8594;</button>
+        <button id="tourexit">Exit</button>
+      </div>
+    </div>
+  </div>
+
+  <aside>
+    <div id="side"></div>
+    <div id="detail"></div>
+  </aside>
+</div>
+
+<script type="module" src="/static/js/hardware3d.js"></script>
+</body>
+</html>

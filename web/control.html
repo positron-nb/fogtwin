@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FogTwin — Control Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+<style>
+  .layout { display: grid; grid-template-columns: 1fr 336px; height: calc(100% - 45px); }
+  .mapwrap { position: relative; min-width: 0; background: #0B0E10; }
+  #scene { position: absolute; inset: 0; }
+  #scene canvas { display: block; cursor: grab; }
+  #scene canvas:active { cursor: grabbing; }
+
+  .viewbar {
+    position: absolute; top: 12px; left: 12px; display: flex; gap: 6px;
+    flex-wrap: wrap; z-index: 2;
+  }
+  .legend {
+    position: absolute; left: 12px; bottom: 12px; z-index: 2;
+    background: rgba(16,20,23,.88); border: 1px solid var(--rule);
+    padding: 10px 12px; font-family: var(--mono); font-size: 10px; line-height: 1.8;
+    color: var(--ink-2);
+  }
+  .legend b { color: var(--ink); font-weight: 500; }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+         vertical-align: middle; margin-right: 6px; }
+  #following {
+    position: absolute; top: 12px; right: 12px; z-index: 2;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent);
+    background: rgba(16,20,23,.88); padding: 5px 10px; border: 1px solid var(--accent);
+  }
+  #following:empty { display: none; }
+
+  aside { border-left: 1px solid var(--rule); background: var(--panel); overflow-y: auto; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); }
+  .stats div { background: var(--panel); padding: 12px 14px; }
+  .stats .v { font-size: 22px; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .stats .k { font-family: var(--mono); font-size: 9px; letter-spacing: .13em;
+              text-transform: uppercase; color: var(--ink-3); margin-top: 5px; }
+  .stats .v.warn { color: var(--warn); } .stats .v.crit { color: var(--crit); }
+
+  table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 11px; }
+  td { padding: 6px 12px; border-bottom: 1px solid var(--rule); color: var(--ink-2); }
+  td:first-child { color: var(--ink); }
+  td.r { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.sel td { background: rgba(228,101,47,.12); }
+  td a { color: var(--slate); text-decoration: none; }
+  td a:hover { color: var(--accent); }
+  button.linkish { background: none; border: 0; padding: 0; color: var(--ink);
+                   font-family: var(--mono); font-size: 11px; cursor: pointer; }
+  button.linkish:hover { color: var(--accent); }
+
+  #events { font-family: var(--mono); font-size: 10.5px; line-height: 1.6; padding: 8px 14px; }
+  #events div { padding: 3px 0; border-bottom: 1px solid rgba(44,52,58,.5); color: var(--ink-2); }
+  #events .t { color: var(--ink-3); margin-right: 7px; }
+
+  .controls { padding: 12px 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .whatif { padding: 4px 14px 14px; font-family: var(--mono); font-size: 10.5px; color: var(--ink-2); }
+  .whatif input { width: 100%; accent-color: var(--accent); }
+  .whatif .row { display: flex; justify-content: space-between; margin: 8px 0 4px;
+                 text-transform: uppercase; letter-spacing: .1em; font-size: 9px; color: var(--ink-3); }
+  .whatif .out { color: var(--accent); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Bailadila <span>FogTwin</span></div>
+  <div class="sub">Control Room &middot; Deposit 14</div>
+  <div class="spacer"></div>
+  <a class="sub" href="/hardware" style="color:var(--slate);text-decoration:none">hardware</a>
+  <div class="sub" id="vis-readout">site visibility &mdash;</div>
+  <div class="conn down" id="conn">connecting</div>
+</div>
+
+<div class="layout">
+  <div class="mapwrap">
+    <div id="scene"></div>
+    <div class="viewbar">
+      <button onclick="viewPit()">Pit view</button>
+      <button onclick="viewTop()">Plan</button>
+      <button onclick="viewRamp()">Ramp A</button>
+      <button onclick="toggleFog()">Fog layer</button>
+      <button onclick="toggleLabels()">Labels</button>
+    </div>
+    <div id="following"></div>
+    <div class="legend">
+      <div><b>Click a dumper</b> to follow it &middot; drag to orbit &middot; wheel to zoom</div>
+      <div style="margin-top:6px"><span class="dot" style="background:#4FBE8B"></span>zone free
+        &nbsp;<span class="dot" style="background:#E4574F"></span>zone occupied</div>
+      <div><span class="dot" style="background:#E0A93B"></span>amber ring = staleness uncertainty</div>
+      <div><b>White blanket</b> = the visibility field the speed policy is using</div>
+    </div>
+  </div>
+
+  <aside>
+    <div class="panel-title">Shift status</div>
+    <div class="stats">
+      <div><div class="v" id="s-fleet">0</div><div class="k">dumpers tracked</div></div>
+      <div><div class="v" id="s-moving">0</div><div class="k">moving</div></div>
+      <div><div class="v" id="s-speed">0</div><div class="k">avg km/h</div></div>
+      <div><div class="v" id="s-held">0</div><div class="k">holding at zones</div></div>
+      <div><div class="v" id="s-vis">&mdash;</div><div class="k">worst visibility m</div></div>
+      <div><div class="v" id="s-nm">0</div><div class="k">near misses logged</div></div>
+    </div>
+
+    <div class="panel-title">Conflict zones</div>
+    <table id="zones"></table>
+
+    <div class="panel-title">Fleet</div>
+    <table id="fleet"></table>
+
+    <div class="panel-title">Fog controls &mdash; demo</div>
+    <div class="controls">
+      <button onclick="setFog(1000,'all')">Clear</button>
+      <button onclick="setFog(80,'all')">Reduced</button>
+      <button class="hot" onclick="setFog(6,'all')">Dense fog</button>
+      <button onclick="setFog(5,'MET-CREST')">Fog crest bench only</button>
+    </div>
+
+    <div class="panel-title">What-if &mdash; visibility vs throughput</div>
+    <div class="whatif">
+      <div class="row"><span>site visibility</span><span class="out" id="wi-vis">1000 m</span></div>
+      <input type="range" id="wi" min="3" max="500" value="500" oninput="whatif(this.value)">
+      <div class="row"><span>modelled haul speed</span><span class="out" id="wi-speed">&mdash;</span></div>
+      <div class="row"><span>cycle time vs clear</span><span class="out" id="wi-cycle">&mdash;</span></div>
+      <div class="row"><span>throughput retained</span><span class="out" id="wi-tput">&mdash;</span></div>
+      <div style="color:var(--ink-3);margin-top:8px;line-height:1.5">
+        Without the twin, the operator can only run to what the eye can see.
+        With it, the corridor is known from survey and the binding limit is the
+        twin horizon, not the fog.
+      </div>
+    </div>
+
+    <div class="panel-title">Event log</div>
+    <div id="events"></div>
+  </aside>
+</div>
+
+<script type="module" src="/static/js/control3d.js"></script>
+</body>
+</html>

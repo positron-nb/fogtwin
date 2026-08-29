@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FogTwin — Measured Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+<style>
+  body { overflow: auto; }
+  main { max-width: 1120px; margin: 0 auto; padding: 30px 26px 90px; }
+
+  h1 { font-size: 30px; font-weight: 700; letter-spacing: -.03em; margin: 0 0 6px; }
+  .sub2 { font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+          text-transform: uppercase; color: var(--ink-3); margin-bottom: 26px; }
+  h2 { font-size: 17px; font-weight: 600; margin: 34px 0 4px; letter-spacing: -.01em; }
+  h2 .n { font-family: var(--mono); font-size: 10px; color: var(--accent);
+          letter-spacing: .16em; display: block; margin-bottom: 7px; }
+  p { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); max-width: 82ch; margin: 0 0 12px; }
+  p b, li b { color: var(--ink); font-weight: 600; }
+  ul { max-width: 82ch; padding-left: 18px; margin: 0 0 14px; }
+  li { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); margin-bottom: 8px; }
+  li::marker { color: var(--accent); }
+  code { font-family: var(--mono); font-size: .88em; background: var(--panel-2);
+         border: 1px solid var(--rule); padding: 1px 5px; }
+
+  .headline { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr));
+              gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 22px 0 8px; }
+  .headline div { background: var(--panel); padding: 16px 18px; }
+  .headline .v { font-size: 30px; font-weight: 700; letter-spacing: -.035em;
+                 font-variant-numeric: tabular-nums; line-height: 1; }
+  .headline .v.good { color: var(--ok); } .headline .v.warn { color: var(--warn); }
+  .headline .k { font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+                 text-transform: uppercase; color: var(--ink-3); margin-top: 9px; line-height: 1.5; }
+
+  .method { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0 8px; }
+  .arm { background: var(--panel); border: 1px solid var(--rule); padding: 14px 16px; }
+  .arm.b { border-left: 3px solid var(--ink-3); }
+  .arm.f { border-left: 3px solid var(--accent); }
+  .arm h4 { font-family: var(--mono); font-size: 10px; letter-spacing: .16em;
+            text-transform: uppercase; margin: 0 0 8px; color: var(--ink-3); }
+  .arm p { font-size: 12.5px; margin: 0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 14px 0 10px;
+          background: var(--panel); border: 1px solid var(--rule); }
+  th { font-family: var(--mono); font-size: 9px; letter-spacing: .13em; text-transform: uppercase;
+       color: var(--ink-3); text-align: right; padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  th:first-child { text-align: left; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--rule); text-align: right;
+       font-variant-numeric: tabular-nums; font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+  td:first-child { text-align: left; color: var(--ink); }
+  tr:last-child td { border-bottom: 0; }
+  td .sd { color: var(--ink-3); font-size: 10.5px; }
+  td.gain { color: var(--ok); font-weight: 600; }
+  td.gain.neg { color: var(--warn); }
+
+  .chartwrap { background: var(--panel); border: 1px solid var(--rule); padding: 16px; margin: 14px 0 6px; }
+  .chartwrap svg { display: block; width: 100%; height: auto; }
+  .key { display: flex; gap: 16px; font-family: var(--mono); font-size: 10px;
+         color: var(--ink-3); margin-top: 10px; }
+  .key i { display: inline-block; width: 11px; height: 11px; margin-right: 5px;
+           vertical-align: -1px; }
+
+  .caveat { border: 1px solid var(--rule); border-left: 3px solid var(--warn);
+            background: var(--panel); padding: 15px 18px; margin: 16px 0; }
+  .caveat h4 { font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
+               text-transform: uppercase; color: var(--warn); margin: 0 0 8px; }
+  .caveat p:last-child { margin-bottom: 0; }
+
+  .bugs { border: 1px solid var(--rule); border-left: 3px solid var(--crit);
+          background: var(--panel); padding: 15px 18px; margin: 16px 0; }
+  .bugs h4 { font-family: var(--mono); font-size: 10px; letter-spacing: .15em;
+             text-transform: uppercase; color: var(--crit); margin: 0 0 8px; }
+
+  .runcfg { font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+            border: 1px solid var(--rule); padding: 10px 14px; margin: 14px 0; background: var(--panel); }
+  .miss { padding: 40px; text-align: center; font-family: var(--mono);
+          font-size: 12px; color: var(--ink-3); border: 1px solid var(--rule); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Bailadila <span>FogTwin</span></div>
+  <div class="sub">Measured results</div>
+  <div class="spacer"></div>
+  <a class="sub" href="/control" style="color:var(--slate);text-decoration:none">control room</a>
+  <a class="sub" href="/hud" style="color:var(--slate);text-decoration:none">cab hud</a>
+  <a class="sub" href="/hardware" style="color:var(--slate);text-decoration:none">hardware</a>
+  <a class="sub" href="/prototype" style="color:var(--slate);text-decoration:none">prototype</a>
+</div>
+
+<main id="main">
+  <div class="miss">loading experiment…</div>
+</main>
+
+<script type="module" src="/static/js/results.js"></script>
+</body>
+</html>

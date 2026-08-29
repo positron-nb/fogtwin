@@ -1,0 +1,1804 @@
+{
+ "_comment": "Haul network derived from the real Bailadila DEM by scripts/build_roadgraph.py. Bench roads follow true contours; ramps spiral down the flank. ENU metres from the ridge crest. Illustrative layout, real terrain \u2014 replace with NMDC survey when available.",
+ "origin": {
+  "lat": 18.664228,
+  "lon": 81.225616,
+  "alt_m": 1266.0,
+  "note": "Bailadila crest, Deposit 14"
+ },
+ "dem": "data/dem/bailadila.json",
+ "nodes": [
+  {
+   "id": "B0_0",
+   "name": "Bench 9 ch 0",
+   "x": 111.6,
+   "y": 0.0,
+   "z": 1248.0
+  },
+  {
+   "id": "B0_1",
+   "name": "Bench 9 ch 1",
+   "x": 82.4,
+   "y": 61.0,
+   "z": 1248.0
+  },
+  {
+   "id": "B0_2",
+   "name": "Bench 9 ch 2",
+   "x": 27.9,
+   "y": 91.2,
+   "z": 1248.0
+  },
+  {
+   "id": "B0_3",
+   "name": "Bench 9 ch 3",
+   "x": -41.8,
+   "y": 118.1,
+   "z": 1248.0
+  },
+  {
+   "id": "B0_4",
+   "name": "Bench 9 ch 4",
+   "x": -173.8,
+   "y": 117.2,
+   "z": 1248.0
+  },
+  {
+   "id": "B0_5",
+   "name": "Bench 9 ch 5",
+   "x": -116.7,
+   "y": -5.1,
+   "z": 1248.0
+  },
+  {
+   "id": "B0_6",
+   "name": "Bench 9 ch 6",
+   "x": -81.5,
+   "y": -66.0,
+   "z": 1248.0
+  },
+  {
+   "id": "B0_7",
+   "name": "Bench 9 ch 7",
+   "x": -26.2,
+   "y": -101.3,
+   "z": 1248.0
+  },
+  {
+   "id": "B0_8",
+   "name": "Bench 9 ramp head",
+   "x": 49.2,
+   "y": -121.9,
+   "z": 1248.0
+  },
+  {
+   "id": "R0_1",
+   "name": "Ramp A ch 1",
+   "x": 90.9,
+   "y": -108.3,
+   "z": 1244.0
+  },
+  {
+   "id": "R0_2",
+   "name": "Ramp A ch 2",
+   "x": 116.4,
+   "y": -72.7,
+   "z": 1240.0
+  },
+  {
+   "id": "R0_3",
+   "name": "Ramp A ch 3",
+   "x": 136.6,
+   "y": -34.1,
+   "z": 1236.0
+  },
+  {
+   "id": "R0_4",
+   "name": "Ramp A ch 4",
+   "x": 151.6,
+   "y": 10.6,
+   "z": 1232.0
+  },
+  {
+   "id": "B1_0",
+   "name": "Bench 8 ch 0",
+   "x": 148.2,
+   "y": 59.9,
+   "z": 1228.0
+  },
+  {
+   "id": "B1_1",
+   "name": "Bench 8 ch 1",
+   "x": 75.6,
+   "y": 123.3,
+   "z": 1228.0
+  },
+  {
+   "id": "B1_2",
+   "name": "Bench 8 ch 2",
+   "x": -13.6,
+   "y": 155.9,
+   "z": 1228.0
+  },
+  {
+   "id": "B1_3",
+   "name": "Bench 8 ch 3",
+   "x": -172.3,
+   "y": 194.7,
+   "z": 1228.0
+  },
+  {
+   "id": "B1_4",
+   "name": "Bench 8 ch 4",
+   "x": -190.2,
+   "y": 40.4,
+   "z": 1228.0
+  },
+  {
+   "id": "B1_5",
+   "name": "Bench 8 ch 5",
+   "x": -141.4,
+   "y": -64.5,
+   "z": 1228.0
+  },
+  {
+   "id": "B1_6",
+   "name": "Bench 8 ch 6",
+   "x": -73.7,
+   "y": -133.0,
+   "z": 1228.0
+  },
+  {
+   "id": "B1_7",
+   "name": "Bench 8 ch 7",
+   "x": 22.0,
+   "y": -166.9,
+   "z": 1228.0
+  },
+  {
+   "id": "B1_8",
+   "name": "Bench 8 ramp head",
+   "x": 123.7,
+   "y": -128.1,
+   "z": 1228.0
+  },
+  {
+   "id": "R1_1",
+   "name": "Ramp B ch 1",
+   "x": 154.7,
+   "y": -82.2,
+   "z": 1224.0
+  },
+  {
+   "id": "R1_2",
+   "name": "Ramp B ch 2",
+   "x": 177.9,
+   "y": -31.4,
+   "z": 1220.0
+  },
+  {
+   "id": "R1_3",
+   "name": "Ramp B ch 3",
+   "x": 190.3,
+   "y": 26.7,
+   "z": 1216.0
+  },
+  {
+   "id": "R1_4",
+   "name": "Ramp B ch 4",
+   "x": 176.4,
+   "y": 86.1,
+   "z": 1212.0
+  },
+  {
+   "id": "B2_0",
+   "name": "Bench 7 ch 0",
+   "x": 138.3,
+   "y": 133.5,
+   "z": 1208.0
+  },
+  {
+   "id": "B2_1",
+   "name": "Bench 7 ch 1",
+   "x": 29.7,
+   "y": 177.5,
+   "z": 1208.0
+  },
+  {
+   "id": "B2_2",
+   "name": "Bench 7 ch 2",
+   "x": -123.2,
+   "y": 241.7,
+   "z": 1208.0
+  },
+  {
+   "id": "B2_3",
+   "name": "Bench 7 ch 3",
+   "x": -265.4,
+   "y": 132.3,
+   "z": 1208.0
+  },
+  {
+   "id": "B2_4",
+   "name": "Bench 7 ch 4",
+   "x": -207.3,
+   "y": -36.6,
+   "z": 1208.0
+  },
+  {
+   "id": "B2_5",
+   "name": "Bench 7 ch 5",
+   "x": -140.3,
+   "y": -147.9,
+   "z": 1208.0
+  },
+  {
+   "id": "B2_6",
+   "name": "Bench 7 ch 6",
+   "x": -25.5,
+   "y": -207.4,
+   "z": 1208.0
+  },
+  {
+   "id": "B2_7",
+   "name": "Bench 7 ch 7",
+   "x": 115.1,
+   "y": -203.5,
+   "z": 1208.0
+  },
+  {
+   "id": "B2_8",
+   "name": "Bench 7 ramp head",
+   "x": 195.0,
+   "y": -86.8,
+   "z": 1208.0
+  },
+  {
+   "id": "R2_1",
+   "name": "Ramp C ch 1",
+   "x": 218.6,
+   "y": -23.0,
+   "z": 1204.0
+  },
+  {
+   "id": "R2_2",
+   "name": "Ramp C ch 2",
+   "x": 223.2,
+   "y": 47.4,
+   "z": 1200.0
+  },
+  {
+   "id": "R2_3",
+   "name": "Ramp C ch 3",
+   "x": 195.3,
+   "y": 112.7,
+   "z": 1196.0
+  },
+  {
+   "id": "R2_4",
+   "name": "Ramp C ch 4",
+   "x": 143.7,
+   "y": 159.6,
+   "z": 1192.0
+  },
+  {
+   "id": "B3_0",
+   "name": "Bench 6 ch 0",
+   "x": 84.8,
+   "y": 190.5,
+   "z": 1188.0
+  },
+  {
+   "id": "B3_1",
+   "name": "Bench 6 ch 1",
+   "x": -57.7,
+   "y": 260.2,
+   "z": 1188.0
+  },
+  {
+   "id": "B3_2",
+   "name": "Bench 6 ch 2",
+   "x": -271.6,
+   "y": 236.1,
+   "z": 1188.0
+  },
+  {
+   "id": "B3_3",
+   "name": "Bench 6 ch 3",
+   "x": -275.8,
+   "y": 21.7,
+   "z": 1188.0
+  },
+  {
+   "id": "B3_4",
+   "name": "Bench 6 ch 4",
+   "x": -216.2,
+   "y": -135.1,
+   "z": 1188.0
+  },
+  {
+   "id": "B3_5",
+   "name": "Bench 6 ch 5",
+   "x": -92.8,
+   "y": -235.5,
+   "z": 1188.0
+  },
+  {
+   "id": "B3_6",
+   "name": "Bench 6 ch 6",
+   "x": 71.2,
+   "y": -265.9,
+   "z": 1188.0
+  },
+  {
+   "id": "B3_7",
+   "name": "Bench 6 ch 7",
+   "x": 213.7,
+   "y": -170.0,
+   "z": 1188.0
+  },
+  {
+   "id": "B3_8",
+   "name": "Bench 6 ramp head",
+   "x": 253.1,
+   "y": -8.8,
+   "z": 1188.0
+  },
+  {
+   "id": "R3_1",
+   "name": "Ramp D ch 1",
+   "x": 248.3,
+   "y": 71.2,
+   "z": 1184.0
+  },
+  {
+   "id": "R3_2",
+   "name": "Ramp D ch 2",
+   "x": 208.3,
+   "y": 140.5,
+   "z": 1180.0
+  },
+  {
+   "id": "R3_3",
+   "name": "Ramp D ch 3",
+   "x": 145.9,
+   "y": 186.7,
+   "z": 1176.0
+  },
+  {
+   "id": "R3_4",
+   "name": "Ramp D ch 4",
+   "x": 80.0,
+   "y": 219.9,
+   "z": 1172.0
+  },
+  {
+   "id": "B4_0",
+   "name": "Bench 5 ch 0",
+   "x": 10.1,
+   "y": 288.3,
+   "z": 1168.0
+  },
+  {
+   "id": "B4_1",
+   "name": "Bench 5 ch 1",
+   "x": -227.4,
+   "y": 330.9,
+   "z": 1168.0
+  },
+  {
+   "id": "B4_2",
+   "name": "Bench 5 ch 2",
+   "x": -349.9,
+   "y": 120.5,
+   "z": 1168.0
+  },
+  {
+   "id": "B4_3",
+   "name": "Bench 5 ch 3",
+   "x": -282.5,
+   "y": -89.1,
+   "z": 1168.0
+  },
+  {
+   "id": "B4_4",
+   "name": "Bench 5 ch 4",
+   "x": -177.9,
+   "y": -244.9,
+   "z": 1168.0
+  },
+  {
+   "id": "B4_5",
+   "name": "Bench 5 ch 5",
+   "x": 2.7,
+   "y": -314.1,
+   "z": 1168.0
+  },
+  {
+   "id": "B4_6",
+   "name": "Bench 5 ch 6",
+   "x": 200.2,
+   "y": -265.7,
+   "z": 1168.0
+  },
+  {
+   "id": "B4_7",
+   "name": "Bench 5 ch 7",
+   "x": 299.0,
+   "y": -88.6,
+   "z": 1168.0
+  },
+  {
+   "id": "B4_8",
+   "name": "Bench 5 ramp head",
+   "x": 270.1,
+   "y": 98.3,
+   "z": 1168.0
+  },
+  {
+   "id": "R4_1",
+   "name": "Ramp E ch 1",
+   "x": 218.4,
+   "y": 170.6,
+   "z": 1164.0
+  },
+  {
+   "id": "R4_2",
+   "name": "Ramp E ch 2",
+   "x": 145.9,
+   "y": 216.4,
+   "z": 1160.0
+  },
+  {
+   "id": "R4_3",
+   "name": "Ramp E ch 3",
+   "x": 72.0,
+   "y": 251.3,
+   "z": 1156.0
+  },
+  {
+   "id": "R4_4",
+   "name": "Ramp E ch 4",
+   "x": -11.7,
+   "y": 334.2,
+   "z": 1152.0
+  },
+  {
+   "id": "B5_0",
+   "name": "Bench 4 ch 0",
+   "x": -134.0,
+   "y": 368.3,
+   "z": 1148.0
+  },
+  {
+   "id": "B5_1",
+   "name": "Bench 4 ch 1",
+   "x": -379.2,
+   "y": 251.0,
+   "z": 1148.0
+  },
+  {
+   "id": "B5_2",
+   "name": "Bench 4 ch 2",
+   "x": -350.8,
+   "y": -18.4,
+   "z": 1148.0
+  },
+  {
+   "id": "B5_3",
+   "name": "Bench 4 ch 3",
+   "x": -273.6,
+   "y": -225.6,
+   "z": 1148.0
+  },
+  {
+   "id": "B5_4",
+   "name": "Bench 4 ch 4",
+   "x": -86.1,
+   "y": -345.5,
+   "z": 1148.0
+  },
+  {
+   "id": "B5_5",
+   "name": "Bench 4 ch 5",
+   "x": 145.7,
+   "y": -351.6,
+   "z": 1148.0
+  },
+  {
+   "id": "B5_6",
+   "name": "Bench 4 ch 6",
+   "x": 315.2,
+   "y": -189.4,
+   "z": 1148.0
+  },
+  {
+   "id": "B5_7",
+   "name": "Bench 4 ch 7",
+   "x": 321.7,
+   "y": 31.0,
+   "z": 1148.0
+  },
+  {
+   "id": "B5_8",
+   "name": "Bench 4 ramp head",
+   "x": 218.0,
+   "y": 196.3,
+   "z": 1148.0
+  },
+  {
+   "id": "R5_1",
+   "name": "Ramp F ch 1",
+   "x": 141.2,
+   "y": 244.5,
+   "z": 1144.0
+  },
+  {
+   "id": "R5_2",
+   "name": "Ramp F ch 2",
+   "x": 63.7,
+   "y": 299.5,
+   "z": 1140.0
+  },
+  {
+   "id": "R5_3",
+   "name": "Ramp F ch 3",
+   "x": -40.5,
+   "y": 385.5,
+   "z": 1136.0
+  },
+  {
+   "id": "R5_4",
+   "name": "Ramp F ch 4",
+   "x": -183.1,
+   "y": 411.4,
+   "z": 1132.0
+  },
+  {
+   "id": "B6_0",
+   "name": "Bench 3 ch 0",
+   "x": -340.3,
+   "y": 377.9,
+   "z": 1128.0
+  },
+  {
+   "id": "B6_1",
+   "name": "Bench 3 ch 1",
+   "x": -433.5,
+   "y": 88.2,
+   "z": 1128.0
+  },
+  {
+   "id": "B6_2",
+   "name": "Bench 3 ch 2",
+   "x": -365.8,
+   "y": -170.6,
+   "z": 1128.0
+  },
+  {
+   "id": "B6_3",
+   "name": "Bench 3 ch 3",
+   "x": -192.1,
+   "y": -353.7,
+   "z": 1128.0
+  },
+  {
+   "id": "B6_4",
+   "name": "Bench 3 ch 4",
+   "x": 58.5,
+   "y": -416.2,
+   "z": 1128.0
+  },
+  {
+   "id": "B6_5",
+   "name": "Bench 3 ch 5",
+   "x": 299.8,
+   "y": -305.0,
+   "z": 1128.0
+  },
+  {
+   "id": "B6_6",
+   "name": "Bench 3 ch 6",
+   "x": 397.6,
+   "y": -63.0,
+   "z": 1128.0
+  },
+  {
+   "id": "B6_7",
+   "name": "Bench 3 ch 7",
+   "x": 318.1,
+   "y": 165.6,
+   "z": 1128.0
+  },
+  {
+   "id": "B6_8",
+   "name": "Bench 3 ramp head",
+   "x": 134.6,
+   "y": 275.9,
+   "z": 1128.0
+  },
+  {
+   "id": "R6_1",
+   "name": "Ramp G ch 1",
+   "x": 49.4,
+   "y": 351.5,
+   "z": 1124.0
+  },
+  {
+   "id": "R6_2",
+   "name": "Ramp G ch 2",
+   "x": -74.9,
+   "y": 424.5,
+   "z": 1120.0
+  },
+  {
+   "id": "R6_3",
+   "name": "Ramp G ch 3",
+   "x": -234.4,
+   "y": 440.8,
+   "z": 1116.0
+  },
+  {
+   "id": "R6_4",
+   "name": "Ramp G ch 4",
+   "x": -394.9,
+   "y": 381.4,
+   "z": 1112.0
+  },
+  {
+   "id": "B7_0",
+   "name": "Bench 2 ch 0",
+   "x": -483.1,
+   "y": 235.6,
+   "z": 1108.0
+  },
+  {
+   "id": "B7_1",
+   "name": "Bench 2 ch 1",
+   "x": -438.1,
+   "y": -81.2,
+   "z": 1108.0
+  },
+  {
+   "id": "B7_2",
+   "name": "Bench 2 ch 2",
+   "x": -309.5,
+   "y": -331.8,
+   "z": 1108.0
+  },
+  {
+   "id": "B7_3",
+   "name": "Bench 2 ch 3",
+   "x": -52.0,
+   "y": -456.3,
+   "z": 1108.0
+  },
+  {
+   "id": "B7_4",
+   "name": "Bench 2 ch 4",
+   "x": 241.4,
+   "y": -418.0,
+   "z": 1108.0
+  },
+  {
+   "id": "B7_5",
+   "name": "Bench 2 ch 5",
+   "x": 425.5,
+   "y": -185.0,
+   "z": 1108.0
+  },
+  {
+   "id": "B7_6",
+   "name": "Bench 2 ch 6",
+   "x": 394.1,
+   "y": 91.0,
+   "z": 1108.0
+  },
+  {
+   "id": "B7_7",
+   "name": "Bench 2 ch 7",
+   "x": 227.4,
+   "y": 266.3,
+   "z": 1108.0
+  },
+  {
+   "id": "B7_8",
+   "name": "Bench 2 ramp head",
+   "x": 29.7,
+   "y": 424.6,
+   "z": 1108.0
+  },
+  {
+   "id": "R7_1",
+   "name": "Ramp H ch 1",
+   "x": -117.2,
+   "y": 469.9,
+   "z": 1104.0
+  },
+  {
+   "id": "R7_2",
+   "name": "Ramp H ch 2",
+   "x": -297.4,
+   "y": 476.0,
+   "z": 1100.0
+  },
+  {
+   "id": "R7_3",
+   "name": "Ramp H ch 3",
+   "x": -450.3,
+   "y": 377.9,
+   "z": 1096.0
+  },
+  {
+   "id": "R7_4",
+   "name": "Ramp H ch 4",
+   "x": -524.4,
+   "y": 211.9,
+   "z": 1092.0
+  },
+  {
+   "id": "B8_0",
+   "name": "Bench 1 ch 0",
+   "x": -516.1,
+   "y": 36.1,
+   "z": 1088.0
+  },
+  {
+   "id": "B8_1",
+   "name": "Bench 1 ch 1",
+   "x": -425.7,
+   "y": -271.2,
+   "z": 1088.0
+  },
+  {
+   "id": "B8_2",
+   "name": "Bench 1 ch 2",
+   "x": -180.5,
+   "y": -470.2,
+   "z": 1088.0
+  },
+  {
+   "id": "B8_3",
+   "name": "Bench 1 ch 3",
+   "x": 140.3,
+   "y": -505.8,
+   "z": 1088.0
+  },
+  {
+   "id": "B8_4",
+   "name": "Bench 1 ch 4",
+   "x": 411.3,
+   "y": -321.3,
+   "z": 1088.0
+  },
+  {
+   "id": "B8_5",
+   "name": "Bench 1 ch 5",
+   "x": 482.3,
+   "y": -12.6,
+   "z": 1088.0
+  },
+  {
+   "id": "B8_6",
+   "name": "Bench 1 ch 6",
+   "x": 345.6,
+   "y": 242.0,
+   "z": 1088.0
+  },
+  {
+   "id": "B8_7",
+   "name": "Bench 1 ch 7",
+   "x": 124.4,
+   "y": 371.9,
+   "z": 1088.0
+  },
+  {
+   "id": "B8_8",
+   "name": "Bench 1 ramp head",
+   "x": -166.0,
+   "y": 510.8,
+   "z": 1088.0
+  },
+  {
+   "id": "H1",
+   "name": "Haul road ch 1",
+   "x": -396.7,
+   "y": 624.8,
+   "z": 1070.2
+  },
+  {
+   "id": "H2",
+   "name": "Haul road ch 2",
+   "x": -627.4,
+   "y": 738.7,
+   "z": 1052.5
+  },
+  {
+   "id": "H3",
+   "name": "Haul road ch 3",
+   "x": -858.1,
+   "y": 852.7,
+   "z": 1034.8
+  },
+  {
+   "id": "H4",
+   "name": "Haul road ch 4",
+   "x": -1088.8,
+   "y": 966.7,
+   "z": 1017.0
+  },
+  {
+   "id": "H5",
+   "name": "Crusher approach",
+   "x": -1319.5,
+   "y": 1080.7,
+   "z": 999.2
+  },
+  {
+   "id": "H6",
+   "name": "Crusher tip",
+   "x": -1550.2,
+   "y": 1194.6,
+   "z": 981.5
+  },
+  {
+   "id": "S0",
+   "name": "Bench 9 shovel face",
+   "x": 41.6,
+   "y": 0.0,
+   "z": 1248.0
+  },
+  {
+   "id": "S2",
+   "name": "Bench 7 shovel face",
+   "x": 87.9,
+   "y": 84.9,
+   "z": 1208.0
+  }
+ ],
+ "edges": [
+  {
+   "id": "E_B0_0",
+   "a": "B0_0",
+   "b": "B0_1",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B0_1",
+   "a": "B0_1",
+   "b": "B0_2",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B0_2",
+   "a": "B0_2",
+   "b": "B0_3",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B0_3",
+   "a": "B0_3",
+   "b": "B0_4",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B0_4",
+   "a": "B0_4",
+   "b": "B0_5",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B0_5",
+   "a": "B0_5",
+   "b": "B0_6",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B0_6",
+   "a": "B0_6",
+   "b": "B0_7",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B0_7",
+   "a": "B0_7",
+   "b": "B0_8",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_R0_0",
+   "a": "B0_8",
+   "b": "R0_1",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R0_1",
+   "a": "R0_1",
+   "b": "R0_2",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R0_2",
+   "a": "R0_2",
+   "b": "R0_3",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R0_3",
+   "a": "R0_3",
+   "b": "R0_4",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R0_4",
+   "a": "R0_4",
+   "b": "B1_0",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_B1_0",
+   "a": "B1_0",
+   "b": "B1_1",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B1_1",
+   "a": "B1_1",
+   "b": "B1_2",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B1_2",
+   "a": "B1_2",
+   "b": "B1_3",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B1_3",
+   "a": "B1_3",
+   "b": "B1_4",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B1_4",
+   "a": "B1_4",
+   "b": "B1_5",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B1_5",
+   "a": "B1_5",
+   "b": "B1_6",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B1_6",
+   "a": "B1_6",
+   "b": "B1_7",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B1_7",
+   "a": "B1_7",
+   "b": "B1_8",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_R1_0",
+   "a": "B1_8",
+   "b": "R1_1",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-B"
+  },
+  {
+   "id": "E_R1_1",
+   "a": "R1_1",
+   "b": "R1_2",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-B"
+  },
+  {
+   "id": "E_R1_2",
+   "a": "R1_2",
+   "b": "R1_3",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-B"
+  },
+  {
+   "id": "E_R1_3",
+   "a": "R1_3",
+   "b": "R1_4",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-B"
+  },
+  {
+   "id": "E_R1_4",
+   "a": "R1_4",
+   "b": "B2_0",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-B"
+  },
+  {
+   "id": "E_B2_0",
+   "a": "B2_0",
+   "b": "B2_1",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B2_1",
+   "a": "B2_1",
+   "b": "B2_2",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B2_2",
+   "a": "B2_2",
+   "b": "B2_3",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B2_3",
+   "a": "B2_3",
+   "b": "B2_4",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B2_4",
+   "a": "B2_4",
+   "b": "B2_5",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B2_5",
+   "a": "B2_5",
+   "b": "B2_6",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B2_6",
+   "a": "B2_6",
+   "b": "B2_7",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B2_7",
+   "a": "B2_7",
+   "b": "B2_8",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_R2_0",
+   "a": "B2_8",
+   "b": "R2_1",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R2_1",
+   "a": "R2_1",
+   "b": "R2_2",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R2_2",
+   "a": "R2_2",
+   "b": "R2_3",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R2_3",
+   "a": "R2_3",
+   "b": "R2_4",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R2_4",
+   "a": "R2_4",
+   "b": "B3_0",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_B3_0",
+   "a": "B3_0",
+   "b": "B3_1",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B3_1",
+   "a": "B3_1",
+   "b": "B3_2",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B3_2",
+   "a": "B3_2",
+   "b": "B3_3",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B3_3",
+   "a": "B3_3",
+   "b": "B3_4",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B3_4",
+   "a": "B3_4",
+   "b": "B3_5",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B3_5",
+   "a": "B3_5",
+   "b": "B3_6",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B3_6",
+   "a": "B3_6",
+   "b": "B3_7",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B3_7",
+   "a": "B3_7",
+   "b": "B3_8",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_R3_0",
+   "a": "B3_8",
+   "b": "R3_1",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R3_1",
+   "a": "R3_1",
+   "b": "R3_2",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R3_2",
+   "a": "R3_2",
+   "b": "R3_3",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R3_3",
+   "a": "R3_3",
+   "b": "R3_4",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R3_4",
+   "a": "R3_4",
+   "b": "B4_0",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_B4_0",
+   "a": "B4_0",
+   "b": "B4_1",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B4_1",
+   "a": "B4_1",
+   "b": "B4_2",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B4_2",
+   "a": "B4_2",
+   "b": "B4_3",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B4_3",
+   "a": "B4_3",
+   "b": "B4_4",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B4_4",
+   "a": "B4_4",
+   "b": "B4_5",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B4_5",
+   "a": "B4_5",
+   "b": "B4_6",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B4_6",
+   "a": "B4_6",
+   "b": "B4_7",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B4_7",
+   "a": "B4_7",
+   "b": "B4_8",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_R4_0",
+   "a": "B4_8",
+   "b": "R4_1",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-E"
+  },
+  {
+   "id": "E_R4_1",
+   "a": "R4_1",
+   "b": "R4_2",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-E"
+  },
+  {
+   "id": "E_R4_2",
+   "a": "R4_2",
+   "b": "R4_3",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-E"
+  },
+  {
+   "id": "E_R4_3",
+   "a": "R4_3",
+   "b": "R4_4",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-E"
+  },
+  {
+   "id": "E_R4_4",
+   "a": "R4_4",
+   "b": "B5_0",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-E"
+  },
+  {
+   "id": "E_B5_0",
+   "a": "B5_0",
+   "b": "B5_1",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B5_1",
+   "a": "B5_1",
+   "b": "B5_2",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B5_2",
+   "a": "B5_2",
+   "b": "B5_3",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B5_3",
+   "a": "B5_3",
+   "b": "B5_4",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B5_4",
+   "a": "B5_4",
+   "b": "B5_5",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B5_5",
+   "a": "B5_5",
+   "b": "B5_6",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B5_6",
+   "a": "B5_6",
+   "b": "B5_7",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B5_7",
+   "a": "B5_7",
+   "b": "B5_8",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_R5_0",
+   "a": "B5_8",
+   "b": "R5_1",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R5_1",
+   "a": "R5_1",
+   "b": "R5_2",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R5_2",
+   "a": "R5_2",
+   "b": "R5_3",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R5_3",
+   "a": "R5_3",
+   "b": "R5_4",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R5_4",
+   "a": "R5_4",
+   "b": "B6_0",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_B6_0",
+   "a": "B6_0",
+   "b": "B6_1",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B6_1",
+   "a": "B6_1",
+   "b": "B6_2",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B6_2",
+   "a": "B6_2",
+   "b": "B6_3",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B6_3",
+   "a": "B6_3",
+   "b": "B6_4",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B6_4",
+   "a": "B6_4",
+   "b": "B6_5",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B6_5",
+   "a": "B6_5",
+   "b": "B6_6",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B6_6",
+   "a": "B6_6",
+   "b": "B6_7",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B6_7",
+   "a": "B6_7",
+   "b": "B6_8",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_R6_0",
+   "a": "B6_8",
+   "b": "R6_1",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R6_1",
+   "a": "R6_1",
+   "b": "R6_2",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R6_2",
+   "a": "R6_2",
+   "b": "R6_3",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R6_3",
+   "a": "R6_3",
+   "b": "R6_4",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_R6_4",
+   "a": "R6_4",
+   "b": "B7_0",
+   "half_width": 7.5,
+   "speed_class": 20
+  },
+  {
+   "id": "E_B7_0",
+   "a": "B7_0",
+   "b": "B7_1",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B7_1",
+   "a": "B7_1",
+   "b": "B7_2",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B7_2",
+   "a": "B7_2",
+   "b": "B7_3",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B7_3",
+   "a": "B7_3",
+   "b": "B7_4",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B7_4",
+   "a": "B7_4",
+   "b": "B7_5",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B7_5",
+   "a": "B7_5",
+   "b": "B7_6",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B7_6",
+   "a": "B7_6",
+   "b": "B7_7",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B7_7",
+   "a": "B7_7",
+   "b": "B7_8",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_R7_0",
+   "a": "B7_8",
+   "b": "R7_1",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-H"
+  },
+  {
+   "id": "E_R7_1",
+   "a": "R7_1",
+   "b": "R7_2",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-H"
+  },
+  {
+   "id": "E_R7_2",
+   "a": "R7_2",
+   "b": "R7_3",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-H"
+  },
+  {
+   "id": "E_R7_3",
+   "a": "R7_3",
+   "b": "R7_4",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-H"
+  },
+  {
+   "id": "E_R7_4",
+   "a": "R7_4",
+   "b": "B8_0",
+   "half_width": 7.5,
+   "speed_class": 20,
+   "conflict_zone": "RAMP-H"
+  },
+  {
+   "id": "E_B8_0",
+   "a": "B8_0",
+   "b": "B8_1",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B8_1",
+   "a": "B8_1",
+   "b": "B8_2",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B8_2",
+   "a": "B8_2",
+   "b": "B8_3",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B8_3",
+   "a": "B8_3",
+   "b": "B8_4",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B8_4",
+   "a": "B8_4",
+   "b": "B8_5",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B8_5",
+   "a": "B8_5",
+   "b": "B8_6",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B8_6",
+   "a": "B8_6",
+   "b": "B8_7",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_B8_7",
+   "a": "B8_7",
+   "b": "B8_8",
+   "half_width": 10.0,
+   "speed_class": 30
+  },
+  {
+   "id": "E_H0",
+   "a": "B8_8",
+   "b": "H1",
+   "half_width": 12.0,
+   "speed_class": 40
+  },
+  {
+   "id": "E_H1",
+   "a": "H1",
+   "b": "H2",
+   "half_width": 12.0,
+   "speed_class": 40
+  },
+  {
+   "id": "E_H2",
+   "a": "H2",
+   "b": "H3",
+   "half_width": 12.0,
+   "speed_class": 40
+  },
+  {
+   "id": "E_H3",
+   "a": "H3",
+   "b": "H4",
+   "half_width": 12.0,
+   "speed_class": 40
+  },
+  {
+   "id": "E_H4",
+   "a": "H4",
+   "b": "H5",
+   "half_width": 12.0,
+   "speed_class": 40
+  },
+  {
+   "id": "E_H5",
+   "a": "H5",
+   "b": "H6",
+   "half_width": 8.0,
+   "speed_class": 15,
+   "conflict_zone": "TIP-CRUSHER"
+  },
+  {
+   "id": "E_S0",
+   "a": "S0",
+   "b": "B0_0",
+   "half_width": 10.0,
+   "speed_class": 15,
+   "conflict_zone": "SHOVEL-TOP"
+  },
+  {
+   "id": "E_S2",
+   "a": "S2",
+   "b": "B2_0",
+   "half_width": 10.0,
+   "speed_class": 15,
+   "conflict_zone": "SHOVEL-MID"
+  }
+ ],
+ "conflict_zones": [
+  {
+   "id": "RAMP-B",
+   "name": "Ramp B single lane",
+   "capacity": 1,
+   "approach_m": 180
+  },
+  {
+   "id": "RAMP-E",
+   "name": "Ramp E single lane",
+   "capacity": 1,
+   "approach_m": 180
+  },
+  {
+   "id": "RAMP-H",
+   "name": "Ramp H single lane",
+   "capacity": 1,
+   "approach_m": 180
+  },
+  {
+   "id": "TIP-CRUSHER",
+   "name": "Crusher tip point",
+   "capacity": 1,
+   "approach_m": 140
+  },
+  {
+   "id": "SHOVEL-TOP",
+   "name": "Bench 9 loading bay",
+   "capacity": 1,
+   "approach_m": 120
+  },
+  {
+   "id": "SHOVEL-MID",
+   "name": "Bench 7 loading bay",
+   "capacity": 1,
+   "approach_m": 120
+  }
+ ],
+ "met_stations": [
+  {
+   "station_id": "MET-CREST",
+   "name": "Crest bench",
+   "x": -173.8,
+   "y": 117.2,
+   "z": 1248.0
+  },
+  {
+   "station_id": "MET-RAMP",
+   "name": "Upper ramp",
+   "x": -25.5,
+   "y": -207.4,
+   "z": 1208.0
+  },
+  {
+   "station_id": "MET-MID",
+   "name": "Mid bench",
+   "x": -282.5,
+   "y": -89.1,
+   "z": 1168.0
+  },
+  {
+   "station_id": "MET-TOE",
+   "name": "Toe bench",
+   "x": 482.3,
+   "y": -12.6,
+   "z": 1088.0
+  },
+  {
+   "station_id": "MET-CRUSHER",
+   "name": "Crusher",
+   "x": -1319.5,
+   "y": 1080.7,
+   "z": 999.2
+  }
+ ],
+ "cycles": [
+  {
+   "from": "S0",
+   "to": "H6"
+  },
+  {
+   "from": "S2",
+   "to": "H6"
+  }
+ ]
+}

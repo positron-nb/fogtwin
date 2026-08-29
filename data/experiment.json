@@ -1,0 +1,450 @@
+{
+ "config": {
+  "seeds": 4,
+  "minutes": 25.0,
+  "fleet": 6,
+  "visibilities": [
+   1000,
+   50,
+   8
+  ],
+  "payload_t": 92.0,
+  "proximity_m": 25.0
+ },
+ "summary": [
+  {
+   "visibility_m": 1000,
+   "baseline": {
+    "tonne_km_per_hour": [
+     6443.6131,
+     950.9036
+    ],
+    "cycle_min": [
+     null,
+     0.0
+    ],
+    "kmh": [
+     25.592,
+     0.1582
+    ],
+    "cooccupancy_s_per_hour": [
+     185.76,
+     40.4882
+    ],
+    "proximity_per_hour": [
+     15.6,
+     2.0785
+    ],
+    "tips": [
+     2.5,
+     0.5
+    ]
+   },
+   "fogtwin": {
+    "tonne_km_per_hour": [
+     6329.4241,
+     930.8323
+    ],
+    "cycle_min": [
+     null,
+     0.0
+    ],
+    "kmh": [
+     25.2748,
+     0.1758
+    ],
+    "cooccupancy_s_per_hour": [
+     28.8,
+     28.8978
+    ],
+    "proximity_per_hour": [
+     13.8,
+     1.0392
+    ],
+    "tips": [
+     2,
+     0.0
+    ]
+   },
+   "gain": 0.9823
+  },
+  {
+   "visibility_m": 50,
+   "baseline": {
+    "tonne_km_per_hour": [
+     6443.6131,
+     950.9036
+    ],
+    "cycle_min": [
+     null,
+     0.0
+    ],
+    "kmh": [
+     25.3877,
+     0.0994
+    ],
+    "cooccupancy_s_per_hour": [
+     159.36,
+     15.2546
+    ],
+    "proximity_per_hour": [
+     16.8,
+     0.0
+    ],
+    "tips": [
+     2,
+     0.0
+    ]
+   },
+   "fogtwin": {
+    "tonne_km_per_hour": [
+     6329.4241,
+     930.8323
+    ],
+    "cycle_min": [
+     null,
+     0.0
+    ],
+    "kmh": [
+     25.2748,
+     0.1758
+    ],
+    "cooccupancy_s_per_hour": [
+     28.8,
+     28.8978
+    ],
+    "proximity_per_hour": [
+     13.8,
+     1.0392
+    ],
+    "tips": [
+     2,
+     0.0
+    ]
+   },
+   "gain": 0.9823
+  },
+  {
+   "visibility_m": 8,
+   "baseline": {
+    "tonne_km_per_hour": [
+     3150.6997,
+     418.9936
+    ],
+    "cycle_min": [
+     null,
+     0.0
+    ],
+    "kmh": [
+     10.5736,
+     0.0006
+    ],
+    "cooccupancy_s_per_hour": [
+     232.32,
+     12.2518
+    ],
+    "proximity_per_hour": [
+     0.0,
+     0.0
+    ],
+    "tips": [
+     1,
+     0.0
+    ]
+   },
+   "fogtwin": {
+    "tonne_km_per_hour": [
+     6329.4241,
+     930.8323
+    ],
+    "cycle_min": [
+     null,
+     0.0
+    ],
+    "kmh": [
+     25.2748,
+     0.1758
+    ],
+    "cooccupancy_s_per_hour": [
+     28.8,
+     28.8978
+    ],
+    "proximity_per_hour": [
+     13.8,
+     1.0392
+    ],
+    "tips": [
+     2,
+     0.0
+    ]
+   },
+   "gain": 2.0089
+  }
+ ],
+ "runs": [
+  {
+   "arm": "baseline",
+   "visibility_m": 1000,
+   "seed": 0,
+   "tonne_km_per_hour": 6959.3814,
+   "cycle_min": null,
+   "kmh": 25.8365,
+   "cooccupancy_s_per_hour": 139.2,
+   "proximity_per_hour": 12.0,
+   "tips": 2
+  },
+  {
+   "arm": "baseline",
+   "visibility_m": 1000,
+   "seed": 1,
+   "tonne_km_per_hour": 7742.4484,
+   "cycle_min": null,
+   "kmh": 25.4561,
+   "cooccupancy_s_per_hour": 217.92,
+   "proximity_per_hour": 16.8,
+   "tips": 3
+  },
+  {
+   "arm": "baseline",
+   "visibility_m": 1000,
+   "seed": 2,
+   "tonne_km_per_hour": 5629.8186,
+   "cycle_min": null,
+   "kmh": 25.6271,
+   "cooccupancy_s_per_hour": 152.64,
+   "proximity_per_hour": 16.8,
+   "tips": 2
+  },
+  {
+   "arm": "baseline",
+   "visibility_m": 1000,
+   "seed": 3,
+   "tonne_km_per_hour": 5442.8038,
+   "cycle_min": null,
+   "kmh": 25.4485,
+   "cooccupancy_s_per_hour": 233.28,
+   "proximity_per_hour": 16.8,
+   "tips": 3
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 1000,
+   "seed": 0,
+   "tonne_km_per_hour": 6798.8356,
+   "cycle_min": null,
+   "kmh": 25.5581,
+   "cooccupancy_s_per_hour": 0.0,
+   "proximity_per_hour": 12.0,
+   "tips": 2
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 1000,
+   "seed": 1,
+   "tonne_km_per_hour": 7620.2387,
+   "cycle_min": null,
+   "kmh": 25.1317,
+   "cooccupancy_s_per_hour": 54.24,
+   "proximity_per_hour": 14.4,
+   "tips": 2
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 1000,
+   "seed": 2,
+   "tonne_km_per_hour": 5571.8841,
+   "cycle_min": null,
+   "kmh": 25.2854,
+   "cooccupancy_s_per_hour": 0.0,
+   "proximity_per_hour": 14.4,
+   "tips": 2
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 1000,
+   "seed": 3,
+   "tonne_km_per_hour": 5326.7382,
+   "cycle_min": null,
+   "kmh": 25.124,
+   "cooccupancy_s_per_hour": 60.96,
+   "proximity_per_hour": 14.4,
+   "tips": 2
+  },
+  {
+   "arm": "baseline",
+   "visibility_m": 50,
+   "seed": 0,
+   "tonne_km_per_hour": 6959.3814,
+   "cycle_min": null,
+   "kmh": 25.547,
+   "cooccupancy_s_per_hour": 139.2,
+   "proximity_per_hour": 16.8,
+   "tips": 2
+  },
+  {
+   "arm": "baseline",
+   "visibility_m": 50,
+   "seed": 1,
+   "tonne_km_per_hour": 7742.4484,
+   "cycle_min": null,
+   "kmh": 25.305,
+   "cooccupancy_s_per_hour": 165.12,
+   "proximity_per_hour": 16.8,
+   "tips": 2
+  },
+  {
+   "arm": "baseline",
+   "visibility_m": 50,
+   "seed": 2,
+   "tonne_km_per_hour": 5629.8186,
+   "cycle_min": null,
+   "kmh": 25.3964,
+   "cooccupancy_s_per_hour": 152.64,
+   "proximity_per_hour": 16.8,
+   "tips": 2
+  },
+  {
+   "arm": "baseline",
+   "visibility_m": 50,
+   "seed": 3,
+   "tonne_km_per_hour": 5442.8038,
+   "cycle_min": null,
+   "kmh": 25.3025,
+   "cooccupancy_s_per_hour": 180.48,
+   "proximity_per_hour": 16.8,
+   "tips": 2
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 50,
+   "seed": 0,
+   "tonne_km_per_hour": 6798.8356,
+   "cycle_min": null,
+   "kmh": 25.5581,
+   "cooccupancy_s_per_hour": 0.0,
+   "proximity_per_hour": 12.0,
+   "tips": 2
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 50,
+   "seed": 1,
+   "tonne_km_per_hour": 7620.2387,
+   "cycle_min": null,
+   "kmh": 25.1317,
+   "cooccupancy_s_per_hour": 54.24,
+   "proximity_per_hour": 14.4,
+   "tips": 2
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 50,
+   "seed": 2,
+   "tonne_km_per_hour": 5571.8841,
+   "cycle_min": null,
+   "kmh": 25.2854,
+   "cooccupancy_s_per_hour": 0.0,
+   "proximity_per_hour": 14.4,
+   "tips": 2
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 50,
+   "seed": 3,
+   "tonne_km_per_hour": 5326.7382,
+   "cycle_min": null,
+   "kmh": 25.124,
+   "cooccupancy_s_per_hour": 60.96,
+   "proximity_per_hour": 14.4,
+   "tips": 2
+  },
+  {
+   "arm": "baseline",
+   "visibility_m": 8,
+   "seed": 0,
+   "tonne_km_per_hour": 2918.4181,
+   "cycle_min": null,
+   "kmh": 10.5727,
+   "cooccupancy_s_per_hour": 228.48,
+   "proximity_per_hour": 0.0,
+   "tips": 1
+  },
+  {
+   "arm": "baseline",
+   "visibility_m": 8,
+   "seed": 1,
+   "tonne_km_per_hour": 3876.3429,
+   "cycle_min": null,
+   "kmh": 10.5744,
+   "cooccupancy_s_per_hour": 216.48,
+   "proximity_per_hour": 0.0,
+   "tips": 1
+  },
+  {
+   "arm": "baseline",
+   "visibility_m": 8,
+   "seed": 2,
+   "tonne_km_per_hour": 2905.8893,
+   "cycle_min": null,
+   "kmh": 10.5738,
+   "cooccupancy_s_per_hour": 250.56,
+   "proximity_per_hour": 0.0,
+   "tips": 1
+  },
+  {
+   "arm": "baseline",
+   "visibility_m": 8,
+   "seed": 3,
+   "tonne_km_per_hour": 2902.1488,
+   "cycle_min": null,
+   "kmh": 10.5735,
+   "cooccupancy_s_per_hour": 233.76,
+   "proximity_per_hour": 0.0,
+   "tips": 1
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 8,
+   "seed": 0,
+   "tonne_km_per_hour": 6798.8356,
+   "cycle_min": null,
+   "kmh": 25.5581,
+   "cooccupancy_s_per_hour": 0.0,
+   "proximity_per_hour": 12.0,
+   "tips": 2
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 8,
+   "seed": 1,
+   "tonne_km_per_hour": 7620.2387,
+   "cycle_min": null,
+   "kmh": 25.1317,
+   "cooccupancy_s_per_hour": 54.24,
+   "proximity_per_hour": 14.4,
+   "tips": 2
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 8,
+   "seed": 2,
+   "tonne_km_per_hour": 5571.8841,
+   "cycle_min": null,
+   "kmh": 25.2854,
+   "cooccupancy_s_per_hour": 0.0,
+   "proximity_per_hour": 14.4,
+   "tips": 2
+  },
+  {
+   "arm": "fogtwin",
+   "visibility_m": 8,
+   "seed": 3,
+   "tonne_km_per_hour": 5326.7382,
+   "cycle_min": null,
+   "kmh": 25.124,
+   "cooccupancy_s_per_hour": 60.96,
+   "proximity_per_hour": 14.4,
+   "tips": 2
+  }
+ ]
+}
