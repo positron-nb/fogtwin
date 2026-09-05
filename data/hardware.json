@@ -41,8 +41,9 @@
    "bus": "Ethernet / CAN-FD",
    "qty": 1,
    "unit_inr": 35000,
-   "rover": "HB100 or RCWL-0516 Doppler module. Same physics, no angular resolution.",
-   "costnote": "Deliberately NOT cost-reduced. This is the sensor the entire fog argument rests on, and the one a judge should be most suspicious of if it looked cheap. Full production price, no substitution."
+   "rover": "Not fitted — the 77 GHz claim is argued from physics, not from a cheap stand-in",
+   "costnote": "Deliberately NOT cost-reduced. This is the sensor the entire fog argument rests on, and the one a judge should be most suspicious of if it looked cheap. Full production price, no substitution.",
+   "rover_built": false
   },
   {
    "id": "radar-cl",
@@ -75,8 +76,9 @@
    "bus": "CAN-FD",
    "qty": 1,
    "unit_inr": 9000,
-   "rover": "Shared Doppler module, time multiplexed",
-   "costnote": "Same coverage geometry, and a longer wavelength than the forward unit, so nothing is given up in fog. The earlier price was for a TI IWR6843 evaluation board; 24 GHz automotive corner radar is a mass-produced part that does this job at production cost."
+   "rover": "HC-SR04 ultrasonic, forward — 4 m, 15° cone",
+   "costnote": "Same coverage geometry, and a longer wavelength than the forward unit, so nothing is given up in fog. The earlier price was for a TI IWR6843 evaluation board; 24 GHz automotive corner radar is a mass-produced part that does this job at production cost.",
+   "rover_built": true
   },
   {
    "id": "radar-cr",
@@ -109,8 +111,9 @@
    "bus": "CAN-FD",
    "qty": 1,
    "unit_inr": 9000,
-   "rover": "Shared Doppler module, time multiplexed",
-   "costnote": "Same coverage geometry, and a longer wavelength than the forward unit, so nothing is given up in fog. The earlier price was for a TI IWR6843 evaluation board; 24 GHz automotive corner radar is a mass-produced part that does this job at production cost."
+   "rover": "Not fitted — one ultrasonic only",
+   "costnote": "Same coverage geometry, and a longer wavelength than the forward unit, so nothing is given up in fog. The earlier price was for a TI IWR6843 evaluation board; 24 GHz automotive corner radar is a mass-produced part that does this job at production cost.",
+   "rover_built": false
   },
   {
    "id": "thermal",
@@ -143,8 +146,9 @@
    "bus": "USB 3 / GMSL2",
    "qty": 1,
    "unit_inr": 14000,
-   "rover": "AMG8833 8x8 thermal array. Same band, 64 pixels.",
-   "costnote": "Person detection at the 50-150 m ranges that matter (tip point, loading bay) does not need 640x512. The 300 m frustum in this scene is unchanged; far-range confidence derates slightly."
+   "rover": "Not fitted",
+   "costnote": "Person detection at the 50-150 m ranges that matter (tip point, loading bay) does not need 640x512. The 300 m frustum in this scene is unchanged; far-range confidence derates slightly.",
+   "rover_built": false
   },
   {
    "id": "cam",
@@ -177,7 +181,8 @@
    "bus": "GMSL2",
    "qty": 1,
    "unit_inr": 9000,
-   "rover": "Raspberry Pi Camera v3"
+   "rover": "Not fitted",
+   "rover_built": false
   },
   {
    "id": "gnss",
@@ -208,8 +213,9 @@
    "bus": "USB / UART",
    "qty": 1,
    "unit_inr": 16000,
-   "rover": "DWM1000 UWB trilateration, because GNSS is useless inside a hall",
-   "costnote": "Positioning accuracy is unchanged, same chipset. A moving rover does not need the survey-grade antenna housing a static base station does."
+   "rover": "Not fitted — waypoint replay, or gyro dead reckoning",
+   "costnote": "Positioning accuracy is unchanged, same chipset. A moving rover does not need the survey-grade antenna housing a static base station does.",
+   "rover_built": false
   },
   {
    "id": "imu",
@@ -235,8 +241,9 @@
    "bus": "SPI + CAN",
    "qty": 1,
    "unit_inr": 5000,
-   "rover": "MPU-9250 with wheel encoders",
-   "costnote": "ADIS16470 is tactical-grade and priced for it. Bridging a GNSS gap for 30 seconds of dead reckoning does not need tactical-grade drift performance."
+   "rover": "MPU-6050 (GY-521), complementary filtered on the board",
+   "costnote": "ADIS16470 is tactical-grade and priced for it. Bridging a GNSS gap for 30 seconds of dead reckoning does not need tactical-grade drift performance.",
+   "rover_built": true
   },
   {
    "id": "uwb",
@@ -267,7 +274,8 @@
    "bus": "SPI",
    "qty": 1,
    "unit_inr": 2500,
-   "rover": "Identical part. This one is production hardware already."
+   "rover": "Not fitted",
+   "rover_built": false
   },
   {
    "id": "edge",
@@ -293,8 +301,9 @@
    "bus": "host",
    "qty": 1,
    "unit_inr": 18000,
-   "rover": "Raspberry Pi 4 or ESP32. Same ROS 2 topics, less throughput.",
-   "costnote": "Same JetPack/TensorRT/ROS 2 stack as the 8 GB variant, so nothing above the driver layer changes. 4 GB is enough for fusion, tracking and HUD rendering on one vehicle."
+   "rover": "ESP32 DevKit V1 — the node itself",
+   "costnote": "Same JetPack/TensorRT/ROS 2 stack as the 8 GB variant, so nothing above the driver layer changes. 4 GB is enough for fusion, tracking and HUD rendering on one vehicle.",
+   "rover_built": true
   },
   {
    "id": "modem",
@@ -325,8 +334,9 @@
    "bus": "USB 3",
    "qty": 1,
    "unit_inr": 6000,
-   "rover": "ESP32 Wi-Fi, or LoRa for the comms-loss demo",
-   "costnote": "The V2I2V architecture already routes every vehicle through a roadside unit rather than peer to peer, so phase one never actually used the PC5 sidelink radio it was priced with."
+   "rover": "ESP32 Wi-Fi, 2.4 GHz",
+   "costnote": "The V2I2V architecture already routes every vehicle through a roadside unit rather than peer to peer, so phase one never actually used the PC5 sidelink radio it was priced with.",
+   "rover_built": true
   },
   {
    "id": "lora",
@@ -357,7 +367,8 @@
    "bus": "SPI",
    "qty": 1,
    "unit_inr": 1500,
-   "rover": "Identical part"
+   "rover": "Not fitted",
+   "rover_built": false
   },
   {
    "id": "hud",
@@ -383,8 +394,9 @@
    "bus": "HDMI + USB",
    "qty": 1,
    "unit_inr": 10000,
-   "rover": "Any tablet pointed at the same kiosk URL",
-   "costnote": "Smaller and slightly less bright than the first spec; still meets the sub-0.4 s glance-legibility requirement at cab-mounting distance."
+   "rover": "The /hud page in a browser, driven by the same twin",
+   "costnote": "Smaller and slightly less bright than the first spec; still meets the sub-0.4 s glance-legibility requirement at cab-mounting distance.",
+   "rover_built": true
   },
   {
    "id": "haptic",
@@ -410,7 +422,8 @@
    "bus": "Analogue",
    "qty": 1,
    "unit_inr": 2000,
-   "rover": "Vibration motor on the demo tablet"
+   "rover": "Not fitted",
+   "rover_built": false
   },
   {
    "id": "psu",
@@ -436,8 +449,9 @@
    "bus": "24 V DC",
    "qty": 1,
    "unit_inr": 4500,
-   "rover": "USB power bank",
-   "costnote": "Sized to the kit’s actual measured load rather than worst-case dual-output headroom."
+   "rover": "USB power bank, 5 V",
+   "costnote": "Sized to the kit’s actual measured load rather than worst-case dual-output headroom.",
+   "rover_built": true
   },
   {
    "id": "harness",
@@ -464,7 +478,8 @@
    "bus": "Not applicable",
    "qty": 1,
    "unit_inr": 7000,
-   "rover": "Zip ties and heat shrink, honestly"
+   "rover": "Breadboard, jumpers, foam tape",
+   "rover_built": true
   }
  ],
  "links": [
@@ -656,8 +671,8 @@
   "length_m": 0.34,
   "width_m": 0.22,
   "height_m": 0.16,
-  "budget_inr": 25000,
-  "note": "Publishes the same VehicleState schema as a production dumper, so it joins the live twin beside the simulated fleet with no special casing anywhere in the server."
+  "budget_inr": 1200,
+  "note": "Publishes the same VehicleState schema as a production dumper, so it joins the live twin beside the simulated fleet with no special casing anywhere in the server. Seven of the fifteen production components have a real analogue on the bench; the other eight are not fitted, and the page says so."
  },
  "tour": [
   {
@@ -714,5 +729,187 @@
    "title": "Power, data and cost",
    "body": "One isolated supply off the machine 24 V bus, one compute hub, and a bill of materials near two lakh per vehicle. Against a single day of lost monsoon production at 37 MTPA, that is the easiest number in this project to defend."
   }
- ]
+ ],
+ "circuit": {
+  "_comment": "Electrical layer behind `links`. Machine side and kit side are galvanically separated: the DC-DC is isolated and the J1939 tap is optically isolated with its transmit pin unconnected, so the kit is physically incapable of driving the machine bus. That is the wiring-level basis for the phase-1 claim of no vehicle-control authority.",
+  "supply": {
+   "source": "Machine 24 V DC, 18-32 V operating, dips to ~12 V on crank",
+   "converter": "Isolated DC-DC, 24 V to 12 V, 120 W, 1.5 kV isolation",
+   "budget_w": 85,
+   "rail_a": 7.1,
+   "headroom": "A 120 W converter against a 85 W load leaves the whole kit running at about 71% of supply rating.",
+   "ground": "Single-point star ground. Kit 0 V bonds to chassis at one stud behind the cab; no sensor housing is used as a return path.",
+   "protection": [
+    "F1 10 A blade fuse at the battery tap, within 300 mm of the terminal",
+    "Ideal-diode reverse-polarity block on the 24 V input",
+    "TVS clamp, 36 V standoff, for load dump and inductive kick",
+    "Inrush limiter so the converter does not trip F1 at power-up"
+   ]
+  },
+  "fuses": [
+   {
+    "id": "F1",
+    "rating_a": 10,
+    "rail": "24 V",
+    "protects": "DC-DC input, machine side"
+   },
+   {
+    "id": "F2",
+    "rating_a": 5,
+    "rail": "12 V",
+    "protects": "edge"
+   },
+   {
+    "id": "F3",
+    "rating_a": 3,
+    "rail": "12 V",
+    "protects": "hud"
+   },
+   {
+    "id": "F4",
+    "rating_a": 2,
+    "rail": "12 V",
+    "protects": "haptic"
+   },
+   {
+    "id": "F5",
+    "rating_a": 2,
+    "rail": "12 V",
+    "protects": "radar-lr"
+   },
+   {
+    "id": "F6",
+    "rating_a": 2,
+    "rail": "12 V",
+    "protects": "radar-cl, radar-cr"
+   },
+   {
+    "id": "F7",
+    "rating_a": 2,
+    "rail": "12 V",
+    "protects": "thermal, cam"
+   },
+   {
+    "id": "F8",
+    "rating_a": 2,
+    "rail": "12 V",
+    "protects": "gnss, imu, uwb, lora"
+   },
+   {
+    "id": "F9",
+    "rating_a": 3,
+    "rail": "12 V",
+    "protects": "modem"
+   }
+  ],
+  "buses": [
+   {
+    "id": "canfd",
+    "label": "CAN-FD",
+    "colour": "#4FBE8B",
+    "rate": "500 kbit/s arbitration, 2 Mbit/s data",
+    "topology": "Linear bus, 120 ohm termination at both physical ends",
+    "cable": "Shielded twisted pair, 120 ohm, shield to chassis at one end only",
+    "nodes": [
+     "radar-cl",
+     "radar-cr",
+     "j1939-iso",
+     "edge"
+    ]
+   },
+   {
+    "id": "eth",
+    "label": "Automotive Ethernet",
+    "colour": "#6FA8C8",
+    "rate": "100BASE-T1, radar tracks at 20 Hz",
+    "topology": "Point to point",
+    "cable": "Unshielded twisted pair, M12 X-code at the sensor",
+    "nodes": [
+     "radar-lr",
+     "edge"
+    ]
+   },
+   {
+    "id": "gmsl",
+    "label": "GMSL2 serial video",
+    "colour": "#7FB8D8",
+    "rate": "Up to 6 Gbit/s per link",
+    "topology": "Point to point over coax, power over coax to the camera",
+    "cable": "FAKRA coax, 50 ohm",
+    "nodes": [
+     "cam",
+     "edge"
+    ]
+   },
+   {
+    "id": "usb",
+    "label": "USB 3",
+    "colour": "#9B8FD0",
+    "rate": "640x512 thermal at 30 Hz; modem control and data",
+    "topology": "Point to point, locking screw connectors",
+    "cable": "Shielded USB 3, under 2 m, ferrite at the host end",
+    "nodes": [
+     "thermal",
+     "modem",
+     "edge"
+    ]
+   },
+   {
+    "id": "uart",
+    "label": "UART + 1PPS",
+    "colour": "#E0A93B",
+    "rate": "115200 baud, RTCM in and NMEA out, plus a hardware 1PPS edge",
+    "topology": "Point to point; 1PPS drives a GPIO interrupt for time sync",
+    "cable": "4-core shielded; antenna on RG-174 with a DC block",
+    "nodes": [
+     "gnss",
+     "edge"
+    ]
+   },
+   {
+    "id": "spi",
+    "label": "SPI",
+    "colour": "#C58FD0",
+    "rate": "IMU at 200 Hz, UWB ranges at 10 Hz, LoRa on demand",
+    "topology": "Shared bus, one chip select per device",
+    "cable": "Ribbon inside the enclosure only; nothing leaves the box on SPI",
+    "nodes": [
+     "imu",
+     "uwb",
+     "lora",
+     "edge"
+    ]
+   },
+   {
+    "id": "video",
+    "label": "HDMI",
+    "colour": "#6FD0C8",
+    "rate": "1920x1080 at 60 Hz, corridor render",
+    "topology": "Point to point, plus USB for touch and backlight",
+    "cable": "Automotive HDMI with a latching shell",
+    "nodes": [
+     "edge",
+     "hud"
+    ]
+   },
+   {
+    "id": "analog",
+    "label": "PWM to Class-D amplifier",
+    "colour": "#D08F8F",
+    "rate": "Alert level, 0-100%",
+    "topology": "GPIO PWM into a small amplifier, then the seat transducer",
+    "cable": "2-core, 1.0 mm2, twisted",
+    "nodes": [
+     "edge",
+     "haptic"
+    ]
+   }
+  ],
+  "j1939": {
+   "label": "J1939 listen-only tap",
+   "reads": "Wheel speed, engine rpm, gear, park brake",
+   "isolation": "Optocoupled CAN transceiver; the transmit pin is left physically unconnected on the machine side",
+   "why": "The kit cannot transmit onto the machine bus even if the software tried. No ECU reflash, no brake-line tap, nothing spliced into a safety circuit — the retrofit is electrically read-only."
+  }
+ }
 }

@@ -261,17 +261,24 @@ def main() -> None:
     ap.add_argument("--minutes", type=float, default=40)
     ap.add_argument("--fleet", type=int, default=6)
     ap.add_argument("--out", default="data/experiment.json")
+    # A sweep rather than three points: with enough of them the gain curve
+    # shows where the twin actually overtakes the eye, which is the result
+    # worth having. Three points can only assert it.
+    ap.add_argument("--visibilities", default=",".join(str(v) for v in VISIBILITIES),
+                    help="comma-separated visibilities in metres, high to low")
     args = ap.parse_args()
+    visibilities = [float(v) if "." in v else int(v)
+                    for v in args.visibilities.split(",")]
 
     arms = [Arm("baseline", twin=False), Arm("fogtwin", twin=True)]
     results: list[dict] = []
     summary: list[dict] = []
 
     print(f"{args.seeds} seeds x {args.minutes:.0f} simulated minutes x "
-          f"{len(VISIBILITIES)} visibilities x 2 arms "
-          f"= {args.seeds * len(VISIBILITIES) * 2} runs\n")
+          f"{len(visibilities)} visibilities x 2 arms "
+          f"= {args.seeds * len(visibilities) * 2} runs\n")
 
-    for v in VISIBILITIES:
+    for v in visibilities:
         line = {}
         for arm in arms:
             rows = [run(arm, v, seed, args.minutes, args.fleet)
@@ -299,7 +306,7 @@ def main() -> None:
 
     payload = {
         "config": {"seeds": args.seeds, "minutes": args.minutes,
-                   "fleet": args.fleet, "visibilities": VISIBILITIES,
+                   "fleet": args.fleet, "visibilities": visibilities,
                    "payload_t": PAYLOAD_T, "proximity_m": PROXIMITY_M},
         "summary": summary,
         "runs": results,

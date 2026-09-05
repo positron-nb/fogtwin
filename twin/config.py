@@ -64,6 +64,18 @@ DECEL_LOADED_MS2 = 1.2      # a loaded dumper on wet laterite. Deliberately low.
 SPEED_FLOOR_MS = 1.4        # ~5 km/h crawl
 SPEED_CEIL_MS = 12.0        # ~43 km/h
 
+# Vehicle-id prefixes that identify a bench prototype rather than a machine in
+# the pit. They are full participants in the twin -- they publish, they are
+# given advisories and conflict-zone leases, and they obey them -- but they are
+# hidden from the control room and the cab HUD, which exist to show a
+# controller real traffic.
+PROTOTYPE_PREFIXES = ("RV-",)
+
+
+def is_prototype(vehicle_id: str) -> bool:
+    return vehicle_id.startswith(PROTOTYPE_PREFIXES)
+
+
 # --- environment ----------------------------------------------------------
 ENABLE_SIM = os.environ.get("FOGTWIN_SIM", "1") != "0"
 SIM_FLEET_SIZE = int(os.environ.get("FOGTWIN_FLEET", "6"))

@@ -81,6 +81,12 @@ def neighbours_for(
     for tr in fleet.all_tracks():
         if tr.state.vehicle_id == ego.state.vehicle_id:
             continue
+        # A bench prototype is not traffic. It still receives neighbours of its
+        # own -- it is a participant, and its whole purpose is to be governed
+        # like one -- but no machine in the pit is told a board on a desk is
+        # bearing down on it.
+        if config.is_prototype(tr.state.vehicle_id):
+            continue
         p = fleet.position(tr.state.vehicle_id)
         if p is None:
             continue

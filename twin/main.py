@@ -10,6 +10,7 @@ import asyncio
 import contextlib
 import json
 import math
+import re
 import sys
 import time
 from collections import deque
@@ -20,13 +21,13 @@ from typing import Dict, List, Optional
 # allow `python -m twin.main` from the repo root without installing
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.responses import FileResponse, JSONResponse, Response
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from schema.messages import (
-    Advisory, AlertLevel, DetectionSet, Event, MetReading, Mode,
-    TokenState, VehicleState, WorldSnapshot,
+    Advisory, AlertLevel, Attitude, DetectionSet, Event, MetReading, Mode,
+    NodeReport, Proximity, TokenState, VehicleState, WorldSnapshot,
 )
 
 from . import clock, config
@@ -58,6 +59,11 @@ if config.ENABLE_SIM:
 
 def log_event(kind: str, text: str, level: AlertLevel = AlertLevel.INFO,
               vehicle_id: Optional[str] = None) -> None:
+    # The event log is a controller-facing record of the pit, and a bench
+    # prototype has no business generating entries in it -- an RV-201 berm
+    # departure is a board on a desk, not something anyone should action.
+    if vehicle_id and config.is_prototype(vehicle_id):
+        return
     EVENTS.append(Event(t=clock.now(), kind=kind, level=level,
                         vehicle_id=vehicle_id, text=text))
 
@@ -155,7 +161,8 @@ def compute_advisory(vid: str) -> Optional[Advisory]:
     corridor = GRAPH.corridor_ahead(x, y, heading, horizon_m=180.0, step_m=12.0)
 
     # --- near-miss recording -------------------------------------------
-    if is_near_miss(alert, neigh) and clock.now() - _near_miss_cooldown.get(vid, 0) > 20:
+    if (is_near_miss(alert, neigh) and not config.is_prototype(vid)
+            and clock.now() - _near_miss_cooldown.get(vid, 0) > 20):
         _near_miss_cooldown[vid] = clock.now()
         NEAR_MISSES.append({
             "t": clock.now(), "vehicle_id": vid, "reason": reason,
@@ -219,15 +226,22 @@ async def tick_loop() -> None:
 
 
 def build_snapshot() -> WorldSnapshot:
-    states = FLEET.snapshot_states()
+    # Bench prototypes are dropped here rather than in each front end, so the
+    # control room, the cab list and the neighbour panel cannot disagree about
+    # what counts as traffic. See config.PROTOTYPE_PREFIXES.
+    states = [s for s in FLEET.snapshot_states()
+              if not config.is_prototype(s.vehicle_id)]
     speeds = [s.speed for s in states] or [0.0]
     moving = sum(1 for s in states if s.speed > 0.4)
     return WorldSnapshot(
         t=clock.now(),
         vehicles=states,
-        modes={vid: tr.mode().value for vid, tr in FLEET.tracks.items()},
-        alerts={vid: a.alert.value for vid, a in ADVISORIES.items()},
-        ages={vid: round(tr.age, 2) for vid, tr in FLEET.tracks.items()},
+        modes={vid: tr.mode().value for vid, tr in FLEET.tracks.items()
+               if not config.is_prototype(vid)},
+        alerts={vid: a.alert.value for vid, a in ADVISORIES.items()
+                if not config.is_prototype(vid)},
+        ages={vid: round(tr.age, 2) for vid, tr in FLEET.tracks.items()
+              if not config.is_prototype(vid)},
         zones=TOKENS.statuses(),
         visibility=VIS.per_segment(),
         stations=VIS.station_samples(),
@@ -274,33 +288,112 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Bailadila FogTwin", version="1.0", lifespan=lifespan)
+
+
+@app.middleware("http")
+async def _no_stale_assets(request, call_next):
+    """
+    Make the browser revalidate every page and script instead of trusting its
+    cache. ETags still make that a cheap 304, so this costs nothing on a LAN —
+    and it removes the failure where an edited .js keeps serving from cache and
+    the page half-works. Losing ten minutes to that on demo day is not a trade
+    worth making for caching a file off localhost.
+    """
+    response = await call_next(request)
+    path = request.url.path
+    if path.startswith("/static") or path.endswith(".html") or "." not in path.rsplit("/", 1)[-1]:
+        response.headers["Cache-Control"] = "no-cache, must-revalidate"
+    return response
+
+
+_JS_IMPORT = re.compile(r"""(from\s+['"])(\.{1,2}/[A-Za-z0-9_./-]+\.js)(['"])""")
+
+
+@app.get("/static/js/{name}", include_in_schema=False)
+def js_module(name: str):
+    """
+    Serve an ES module with its relative imports version-stamped.
+
+    Stamping the <script src> in the HTML is not enough: the browser resolves
+    `import ... from './world.js'` itself, and that URL never passes through
+    the page. Miss it and you get a fresh entry module importing a cached
+    dependency — which fails as a missing export, not as a stale file, so it
+    reads like a code bug rather than a cache one.
+
+    Declared ahead of the /static mount so it wins the match.
+    """
+    root = (config.WEB_DIR / "js").resolve()
+    path = (root / name).resolve()
+    if root != path.parent or not path.is_file():
+        raise HTTPException(status_code=404)
+
+    src = path.read_text(encoding="utf-8")
+
+    def stamp(m: re.Match) -> str:
+        target = (path.parent / m.group(2)).resolve()
+        try:
+            v = int(target.stat().st_mtime)
+        except OSError:
+            return m.group(0)
+        return f"{m.group(1)}{m.group(2)}?v={v}{m.group(3)}"
+
+    return Response(_JS_IMPORT.sub(stamp, src),
+                    media_type="application/javascript")
+
+
 app.mount("/static", StaticFiles(directory=str(config.WEB_DIR)), name="static")
+
+
+_ASSET_REF = re.compile(r'((?:href|src)=")(/static/[^"?]+)(")')
+
+
+def _page(name: str) -> HTMLResponse:
+    """
+    Serve an operator page with every /static reference stamped by its mtime.
+
+    Cache headers only bind a browser that has not already stored the asset;
+    a copy taken earlier keeps being served until someone thinks to hard
+    reload. Versioning the URL removes the question — an edited file is a
+    different URL, so a stale copy can never be reused. Cheap: one stat per
+    reference, on a page load, on localhost.
+    """
+    html = (config.WEB_DIR / name).read_text(encoding="utf-8")
+
+    def stamp(m: re.Match) -> str:
+        target = config.WEB_DIR / m.group(2)[len("/static/"):]
+        try:
+            v = int(target.stat().st_mtime)
+        except OSError:
+            return m.group(0)
+        return f"{m.group(1)}{m.group(2)}?v={v}{m.group(3)}"
+
+    return HTMLResponse(_ASSET_REF.sub(stamp, html))
 
 
 @app.get("/", include_in_schema=False)
 @app.get("/control", include_in_schema=False)
 def control_page():
-    return FileResponse(config.WEB_DIR / "control.html")
+    return _page("control.html")
 
 
 @app.get("/hud", include_in_schema=False)
 def hud_page():
-    return FileResponse(config.WEB_DIR / "hud.html")
+    return _page("hud.html")
 
 
 @app.get("/hardware", include_in_schema=False)
 def hardware_page():
-    return FileResponse(config.WEB_DIR / "hardware.html")
+    return _page("hardware.html")
+
+
+@app.get("/node", include_in_schema=False)
+def node_page():
+    return _page("node.html")
 
 
 @app.get("/results", include_in_schema=False)
 def results_page():
-    return FileResponse(config.WEB_DIR / "results.html")
-
-
-@app.get("/prototype", include_in_schema=False)
-def prototype_page():
-    return FileResponse(config.WEB_DIR / "prototype.html")
+    return _page("results.html")
 
 
 @app.get("/api/experiment")
@@ -398,10 +491,101 @@ def ingest_state(msg: VehicleState):
     return {"ok": True}
 
 
+# Latest attitude per vehicle. Deliberately not in the world state: nothing in
+# the interlocking reads it, and a dashboard asking for it should not be able to
+# slow down the 5 Hz tick.
+ATTITUDE: Dict[str, Attitude] = {}
+
+
+@app.post("/ingest/attitude")
+def ingest_attitude(msg: Attitude):
+    msg.t = msg.t or time.time()
+    ATTITUDE[msg.vehicle_id] = msg
+    return {"ok": True}
+
+
+@app.get("/api/attitude/{vehicle_id}")
+def api_attitude(vehicle_id: str):
+    a = ATTITUDE.get(vehicle_id)
+    if a is None:
+        raise HTTPException(status_code=404, detail="no attitude reported yet")
+    return a
+
+
+@app.get("/api/nodes")
+def api_nodes():
+    """
+    Which external nodes are publishing right now, and how recently.
+
+    The dashboard uses this to tell "nothing is connected" apart from "something
+    was connected and has gone quiet", which are very different things to be
+    looking at during a demonstration.
+    """
+    now = time.time()
+    out = []
+    for vid, a in ATTITUDE.items():
+        out.append({"vehicle_id": vid, "age_s": round(now - a.t, 2),
+                    "source": "attitude"})
+    return {"t": now, "nodes": sorted(out, key=lambda n: n["vehicle_id"])}
+
+
+# Last detection set per vehicle, kept only so the node dashboard can show that
+# a radar fired. The fleet model owns the tracks themselves.
+DETECTIONS: Dict[str, DetectionSet] = {}
+PROXIMITY: Dict[str, Proximity] = {}
+
+
 @app.post("/ingest/detections")
 def ingest_detections(msg: DetectionSet):
+    msg.t = msg.t or time.time()
+    DETECTIONS[msg.vehicle_id] = msg
     FLEET.ingest_detections(msg)
     return {"ok": True}
+
+
+@app.get("/api/detections/{vehicle_id}")
+def api_detections(vehicle_id: str):
+    # "nothing detected" is a normal state for a node with no radar fitted, not
+    # an error -- 404 here just fills the dashboard's console with noise.
+    d = DETECTIONS.get(vehicle_id)
+    return d or DetectionSet(vehicle_id=vehicle_id, t=0.0, tracks=[])
+
+
+@app.post("/ingest/proximity")
+def ingest_proximity(msg: Proximity):
+    msg.t = msg.t or time.time()
+    PROXIMITY[msg.vehicle_id] = msg
+    return {"ok": True}
+
+
+@app.get("/api/proximity/{vehicle_id}")
+def api_proximity(vehicle_id: str):
+    # As with detections: a node with no ultrasonic fitted, or one with nothing
+    # in front of it, is a normal state rather than an error.
+    return PROXIMITY.get(vehicle_id) or Proximity(vehicle_id=vehicle_id, t=0.0)
+
+
+@app.post("/ingest/node")
+def ingest_node(msg: NodeReport):
+    """
+    The batched path. Calls the same handlers the individual endpoints call, so
+    there is one implementation of each ingest and no second way for a message
+    to enter the system.
+    """
+    got = []
+    if msg.state is not None:
+        ingest_state(msg.state)
+        got.append("state")
+    if msg.attitude is not None:
+        ingest_attitude(msg.attitude)
+        got.append("attitude")
+    if msg.proximity is not None:
+        ingest_proximity(msg.proximity)
+        got.append("proximity")
+    if msg.detections is not None:
+        ingest_detections(msg.detections)
+        got.append("detections")
+    return {"ok": True, "accepted": got}
 
 
 @app.post("/ingest/met")
@@ -534,6 +718,40 @@ def _start_mqtt():
         return None
 
 
+def _lan_ip() -> str:
+    """
+    The address a rover on the same hotspot should publish to. Connecting a UDP
+    socket outward does not send anything, but it makes the OS pick the route
+    it would really use, which is the only reliable way to get the right
+    interface on a laptop that also has loopback, a VPN and a virtual switch.
+    """
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(("8.8.8.8", 80))
+        return s.getsockname()[0]
+    except Exception:
+        return "127.0.0.1"
+    finally:
+        s.close()
+
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=config.HTTP_PORT, log_level="warning")
+
+    # This used to start at log_level="warning", which meant a healthy server
+    # printed absolutely nothing and looked like it had failed. It is also the
+    # moment someone needs the LAN address to flash into a rover, so say both.
+    port = config.HTTP_PORT
+    ip = _lan_ip()
+    # flush: uvicorn logs to stderr unbuffered, so without this these lines
+    # arrive after the server banner whenever stdout is a pipe or a file.
+    print(f"FogTwin twin server on port {port}", flush=True)
+    print(f"  this laptop   http://localhost:{port}", flush=True)
+    print(f"  on the LAN    http://{ip}:{port}   <- TWIN_HOST for the ESP32", flush=True)
+    print("  ctrl-c to stop", flush=True)
+    # "warning" rather than "info": info logs a line for every request, which
+    # at a few hundred a minute is synchronous I/O on the hot path and buys
+    # nothing -- the startup banner above already says what info was wanted
+    # for, and real errors still print at this level.
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="warning")

@@ -118,6 +118,34 @@ class VehicleState(BaseModel):
     emergency: bool = False
 
 
+class Attitude(BaseModel):
+    """
+    Which way up a machine is, straight off its IMU.
+
+    Not part of the pose beacon: a dumper's attitude is telemetry for a
+    dashboard and for detecting a tip-over, whereas VehicleState is the message
+    the interlocking runs on. Keeping them apart means a node can publish one
+    without implementing the other.
+
+    Pitch and roll come from the gravity vector and are absolute -- they do not
+    drift. Yaw is integrated from the gyro and does, which is why it is reported
+    beside them rather than mixed in.
+    """
+
+    vehicle_id: str
+    t: float = 0.0
+    pitch_deg: float = 0.0                     # nose up positive
+    roll_deg: float = 0.0                      # right side down positive
+    yaw_deg: float = 0.0                       # integrated, drifts
+    ax: float = 0.0                            # g, vehicle frame
+    ay: float = 0.0
+    az: float = 0.0
+    gx: float = 0.0                            # deg/s
+    gy: float = 0.0
+    gz: float = 0.0
+    temp_c: Optional[float] = None             # the MPU-6050 die, near enough
+
+
 class RadarTrack(BaseModel):
     """One tracked object from the on-vehicle radar/thermal fusion."""
 
@@ -136,6 +164,53 @@ class DetectionSet(BaseModel):
     vehicle_id: str
     t: float = 0.0
     tracks: List[RadarTrack] = Field(default_factory=list)
+
+
+class Proximity(BaseModel):
+    """
+    Short-range obstacle distance from an ultrasonic sensor.
+
+    Its own message, and never a RadarTrack. An HC-SR04 is a pressure wave in
+    air: it is a genuine close-in proximity aid, of the kind haul trucks
+    already carry for reversing, and it is also everything radar is not. It
+    reaches a few metres, sees only what is directly in front of it, cannot
+    tell you what it found or how fast that thing is closing, and it is
+    stopped dead by the first solid object -- so it can never see around the
+    bend that hides the machine you needed to know about.
+
+    Those limits are why this exists as a separate message. Published as a
+    radar track it would quietly inherit radar's claims; published as
+    proximity it stays exactly what it is, and the gap between the four metres
+    it reaches and the two hundred and fifty the twin already knows about is
+    the clearest single argument the project has.
+    """
+
+    vehicle_id: str
+    t: float = 0.0
+    range_m: Optional[float] = None            # None == nothing within reach
+    max_range_m: float = 4.0                   # datasheet ceiling for HC-SR04
+    cone_deg: float = 15.0                     # roughly the -6 dB beam width
+    sensor: str = "ultrasonic"
+
+
+class NodeReport(BaseModel):
+    """
+    Everything one vehicle has to say this tick, in a single envelope.
+
+    Purely a transport container. Each field is the same model the dedicated
+    endpoint takes, and the twin routes them to the same stores, so nothing
+    downstream can tell whether a message arrived here or on its own endpoint.
+    It exists because four HTTP round trips per tick held an ESP32 to a quarter
+    of a hertz, and a dashboard that lags a second behind the hand waving at it
+    is not evidence of anything.
+
+    Every field is optional: a node sends what it has.
+    """
+
+    state: Optional[VehicleState] = None
+    attitude: Optional[Attitude] = None
+    proximity: Optional[Proximity] = None
+    detections: Optional[DetectionSet] = None
 
 
 class MetReading(BaseModel):

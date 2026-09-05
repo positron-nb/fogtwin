@@ -63,10 +63,12 @@ def main() -> None:
     dt = 1.0 / args.hz
     pos_conf = 0.05
     held = False
+    prev_heading, t_elapsed = 0.0, 0.0
 
     print(f"rover {args.id} -> {args.twin} at {args.hz} Hz  (ctrl-c to stop)")
     while True:
         started = time.perf_counter()
+        t_elapsed += dt
 
         tx, ty = ROUTE[leg]
         dx, dy = tx - x, ty - y
@@ -83,6 +85,36 @@ def main() -> None:
                 "x": round(x, 2), "y": round(y, 2), "z": args.z,
                 "heading": round(heading, 4), "speed": round(speed, 2),
                 "loaded": True, "payload_t": 92.0, "pos_conf": pos_conf,
+            })
+            # Attitude too, so the dashboard has something to draw before any
+            # hardware exists. Bank into the turns and pitch on the grade: it is
+            # synthetic, and the page labels this node as the desktop stand-in
+            # rather than passing it off as a board on a bench.
+            turn = (heading - prev_heading + math.pi) % (2 * math.pi) - math.pi
+            prev_heading = heading
+            roll = max(-18.0, min(18.0, math.degrees(turn) / max(dt, 1e-3) * 0.35))
+            pitch = 4.0 * math.sin(t_elapsed * 0.21)
+            post(f"{args.twin}/ingest/attitude", {
+                "vehicle_id": args.id, "t": 0,
+                "pitch_deg": round(pitch, 2),
+                "roll_deg": round(roll, 2),
+                "yaw_deg": round(math.degrees(heading) % 360.0, 2),
+                "ax": round(-math.sin(math.radians(pitch)), 3),
+                "ay": round(math.sin(math.radians(roll)), 3),
+                "az": round(math.cos(math.radians(roll)), 3),
+                "gx": 0.0, "gy": round(pitch * 0.4, 2),
+                "gz": round(math.degrees(turn) / max(dt, 1e-3), 2),
+                "temp_c": 34.0,
+            })
+            # Proximity, on the same schedule the board uses. Mostly clear,
+            # with something wandering into the cone every so often -- which is
+            # honest about what an ultrasonic actually gives you: long stretches
+            # of nothing, punctuated by an obstacle already almost on top of you.
+            phase = math.sin(t_elapsed * 0.17)
+            rng = round(0.30 + 1.6 * (1 - phase), 3) if phase > 0.55 else None
+            post(f"{args.twin}/ingest/proximity", {
+                "vehicle_id": args.id, "t": 0, "range_m": rng,
+                "max_range_m": 4.0, "cone_deg": 15.0, "sensor": "ultrasonic",
             })
         except Exception as exc:
             print(f"  uplink down: {exc}")
