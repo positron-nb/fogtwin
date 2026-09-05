@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FogTwin — Prototype Node</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+<style>
+  html, body { height: auto; overflow: visible; }
+  .topbar { position: sticky; top: 0; z-index: 30; }
+  main { max-width: 1240px; margin: 0 auto; padding: 20px 20px 70px; }
+
+  /* ---- page intro: say what this is, in plain words ------------------ */
+  .intro { margin-bottom: 18px; }
+  .intro h1 { font-size: 24px; margin: 0 0 6px; letter-spacing: -.01em; }
+  .intro p { margin: 0; font-size: 14px; line-height: 1.65; color: var(--ink-2);
+             max-width: 74ch; }
+
+  /* ---- the banner ---------------------------------------------------- */
+  .ribbon { display: none; align-items: center; gap: 14px; margin-bottom: 16px;
+            padding: 14px 18px; border: 1px solid var(--rule);
+            border-left-width: 4px; background: var(--panel); }
+  .ribbon.on { display: flex; }
+  .ribbon .tag { font-family: var(--mono); font-size: 11px; letter-spacing: .18em;
+                 text-transform: uppercase; font-weight: 600; white-space: nowrap; }
+  .ribbon .msg { font-size: 15px; color: var(--ink); line-height: 1.45; }
+  .ribbon .msg b { font-variant-numeric: tabular-nums; }
+  .ribbon.warn { border-left-color: var(--warn); }
+  .ribbon.warn .tag { color: var(--warn); }
+  .ribbon.crit { border-left-color: var(--crit); animation: pulse 1.1s ease-in-out infinite; }
+  .ribbon.crit .tag { color: var(--crit); }
+  @keyframes pulse { 0%,100% { background: var(--panel); }
+                     50% { background: rgba(228,87,79,.12); } }
+  @media (prefers-reduced-motion: reduce) { .ribbon.crit { animation: none; } }
+
+  /* ---- layout -------------------------------------------------------- */
+  /* align-items:start, or the left card stretches to match the taller right
+     column and leaves several hundred pixels of empty card under the readouts */
+  .grid { display: grid; gap: 14px; align-items: start;
+          grid-template-columns: minmax(0,1.05fr) minmax(0,1fr); }
+  /* the machine is the thing you look at while scrolling the rest */
+  @media (min-width: 1001px) { #card-att { position: sticky; top: 62px; } }
+  @media (max-width: 1000px) { .grid { grid-template-columns: minmax(0,1fr); } }
+  .stack { display: grid; gap: 14px; align-content: start; }
+
+  .card { background: var(--panel); border: 1px solid var(--rule); }
+  .card > h3 { margin: 0; padding: 12px 16px; border-bottom: 1px solid var(--rule);
+               font-size: 14px; font-weight: 600; color: var(--ink);
+               display: flex; align-items: baseline; gap: 10px; }
+  .card > h3 .r { margin-left: auto; font-family: var(--mono); font-size: 10px;
+                  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+  .card > .say { margin: 0; padding: 9px 16px 0; font-size: 12.5px;
+                 line-height: 1.55; color: var(--ink-3); }
+  .body { padding: 14px 16px 16px; }
+  .card.hot { border-color: var(--crit); }
+  .card.caution { border-color: var(--warn); }
+
+  /* ---- the machine --------------------------------------------------- */
+  .att-read { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+              background: var(--rule); border-top: 1px solid var(--rule); }
+  .att-read div { background: var(--panel); padding: 11px 14px; }
+  .att-read .k { font-size: 11.5px; color: var(--ink-3); }
+  .att-read .k b { color: var(--ink-2); font-weight: 600; }
+  .att-read .v { font-family: var(--mono); font-size: 26px; color: var(--ink);
+                 font-variant-numeric: tabular-nums; margin-top: 3px; line-height: 1.1; }
+  .att-read .v small { font-size: 13px; color: var(--ink-3); }
+  .att-read .v.tip { color: var(--crit); }
+  .att-read .v.lean { color: var(--warn); }
+  .att-read .sub { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+
+  /* ---- charts -------------------------------------------------------- */
+  .chart { position: relative; }
+  .chart svg { display: block; width: 100%; height: 150px;
+               background: var(--panel-2); border: 1px solid var(--rule); }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 9px;
+            font-size: 12px; color: var(--ink-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+  .legend b { font-family: var(--mono); font-variant-numeric: tabular-nums;
+              color: var(--ink); font-weight: 500; }
+  .axnote { display: flex; justify-content: space-between; margin-top: 5px;
+            font-size: 11px; color: var(--ink-3); }
+
+  /* ---- distance ------------------------------------------------------ */
+  .dist { display: flex; align-items: center; gap: 18px; }
+  .cone { width: 76px; height: 66px; flex: 0 0 auto; }
+  .dist-read { flex: 1; min-width: 0; }
+  .dist-val { font-family: var(--mono); font-size: 34px; color: var(--ink);
+              font-variant-numeric: tabular-nums; line-height: 1.05; }
+  .dist-val.near { color: var(--crit); }
+  .dist-val.clear { color: var(--ink-3); font-size: 22px; }
+  .dist-val small { font-size: 15px; color: var(--ink-3); }
+  .closing { font-family: var(--mono); font-size: 11px; color: var(--crit);
+             letter-spacing: .08em; text-transform: uppercase; margin-left: 10px; }
+  .ruler { position: relative; height: 13px; margin-top: 10px;
+           background: var(--panel-2); border: 1px solid var(--rule); }
+  .ruler i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent);
+             width: 0; transition: width .12s linear, opacity .25s; }
+  .ruler u { position: absolute; top: 0; bottom: 0; width: 1px;
+             background: var(--rule); text-decoration: none; }
+  .rlab { display: flex; justify-content: space-between; margin-top: 5px;
+          font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+  /* ---- health -------------------------------------------------------- */
+  .health { display: grid; gap: 1px; background: var(--rule);
+            border: 1px solid var(--rule); }
+  .health > div { background: var(--panel); padding: 12px 14px;
+                  display: flex; align-items: center; gap: 12px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto;
+         background: var(--ink-3); }
+  .dot.ok { background: var(--ok); }
+  .dot.bad { background: var(--crit); }
+  .health .nm { font-size: 13.5px; color: var(--ink); }
+  .health .de { font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+  .health .rt { margin-left: auto; font-family: var(--mono); font-size: 13px;
+                color: var(--ink-2); font-variant-numeric: tabular-nums;
+                white-space: nowrap; }
+
+  /* ---- waiting ------------------------------------------------------- */
+  .waiting { border: 1px solid var(--rule); border-left: 3px solid var(--warn);
+             background: var(--panel); padding: 18px 20px; margin-bottom: 16px; }
+  .waiting h4 { font-size: 15px; color: var(--warn); margin: 0 0 8px; }
+  .waiting p { margin: 0 0 8px; font-size: 13.5px; line-height: 1.65; color: var(--ink-2); }
+  .waiting p:last-child { margin-bottom: 0; }
+  main.idle .card { opacity: .38; filter: saturate(.2); transition: opacity .3s; }
+  code { font-family: var(--mono); font-size: .9em; background: var(--panel-2);
+         border: 1px solid var(--rule); padding: 2px 6px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Bailadila <span>FogTwin</span></div>
+  <div class="sub">Prototype node</div>
+  <nav class="nav">
+    <a href="/control">Control</a>
+    <a href="/hud">Cab HUD</a>
+    <a href="/hardware">Hardware</a>
+    <a href="/results">Results</a>
+    <a href="/node" aria-current="page">Node</a>
+  </nav>
+  <div class="spacer"></div>
+  <div class="sub" id="nodeid">—</div>
+  <div class="conn down" id="conn">waiting</div>
+</div>
+
+<main id="main" class="idle">
+
+  <div class="intro">
+    <h1>The prototype board, live</h1>
+    <p>This page shows one small piece of hardware on a desk: an ESP32 with a motion
+      sensor and a distance sensor, reporting over Wi-Fi. Everything below is measured
+      by that board right now. Nothing here is simulated, and nothing is drawn from
+      anywhere else in the system.</p>
+  </div>
+
+  <div class="waiting" id="waiting">
+    <h4>Nothing is reporting yet</h4>
+    <p>The board is not sending anything, so the panels below are empty rather than
+      filled in with something invented.</p>
+    <p>Power the ESP32 and let it join Wi-Fi, or run the desktop stand-in:
+      <code>python firmware/rover_desktop.py --twin http://localhost:8000</code></p>
+  </div>
+
+  <div class="ribbon" id="ribbon">
+    <span class="tag" id="ribbon-tag">—</span>
+    <span class="msg" id="ribbon-msg"></span>
+  </div>
+
+  <div class="grid">
+    <div class="card" id="card-att">
+      <h3>How the board is sitting <span class="r" id="attage">—</span></h3>
+      <p class="say">The model copies the real board. Pick it up and tilt it, and this
+        moves the same way.</p>
+      <div class="body" style="padding-bottom:0">
+        <div id="att-host"></div>
+      </div>
+      <div class="att-read">
+        <div>
+          <div class="k"><b>Nose up / down</b></div>
+          <div class="v" id="v-pitch">—</div>
+          <div class="sub">pitch</div>
+        </div>
+        <div>
+          <div class="k"><b>Leaning left / right</b></div>
+          <div class="v" id="v-roll">—</div>
+          <div class="sub">roll</div>
+        </div>
+        <div>
+          <div class="k"><b>Turned</b></div>
+          <div class="v" id="v-yaw">—</div>
+          <div class="sub">drifts slowly — see below</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card" id="card-dist">
+        <h3>Distance to the nearest thing in front
+            <span class="r" id="diststate">no sensor</span></h3>
+        <p class="say">The orange wedge is what the distance sensor can actually see:
+          a narrow beam, straight ahead, and only a few metres of it.</p>
+        <div class="body">
+          <div class="dist">
+            <svg class="cone" id="cone" viewBox="0 0 76 66"></svg>
+            <div class="dist-read">
+              <div class="dist-val clear" id="v-dist">&mdash;</div>
+              <div class="ruler" id="ruler"><i id="rulerfill"></i></div>
+              <div class="rlab">
+                <span>touching</span><span>1 m</span><span>2 m</span>
+                <span>3 m</span><span id="rmax">4 m</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Tilt, over the last 30 seconds</h3>
+        <p class="say">Flat is the middle line. Above it the nose is up or it leans
+          right; below it, the other way.</p>
+        <div class="body">
+          <div class="chart"><svg id="ch-tilt" viewBox="0 0 620 150"
+               preserveAspectRatio="none"></svg></div>
+          <div class="legend">
+            <span><i style="background:#E0A93B"></i>Nose up / down
+                  <b id="lg-pitch">—</b></span>
+            <span><i style="background:#9B8FD0"></i>Leaning left / right
+                  <b id="lg-roll">—</b></span>
+          </div>
+          <div class="axnote"><span>30 seconds ago</span><span>now</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Distance, over the last 30 seconds</h3>
+        <p class="say">Lower on the chart means something is closer. Gaps are moments
+          when nothing was in range.</p>
+        <div class="body">
+          <div class="chart"><svg id="ch-dist" viewBox="0 0 620 150"
+               preserveAspectRatio="none"></svg></div>
+          <div class="legend">
+            <span><i style="background:#E4652F"></i>Distance ahead
+                  <b id="lg-dist">—</b></span>
+          </div>
+          <div class="axnote"><span>30 seconds ago</span><span>now</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>What is plugged in <span class="r" id="uprate">—</span></h3>
+        <div class="body">
+          <div class="health">
+            <div>
+              <span class="dot" id="d-esp"></span>
+              <span><span class="nm">ESP32 board</span>
+                    <span class="de">sends everything over Wi-Fi</span></span>
+              <span class="rt" id="r-esp">—</span>
+            </div>
+            <div>
+              <span class="dot" id="d-imu"></span>
+              <span><span class="nm">MPU-6050 motion sensor</span>
+                    <span class="de">measures tilt and turning</span></span>
+              <span class="rt" id="r-imu">—</span>
+            </div>
+            <div>
+              <span class="dot" id="d-son"></span>
+              <span><span class="nm">HC-SR04 distance sensor</span>
+                    <span class="de">measures how far away things are</span></span>
+              <span class="rt" id="r-son">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script type="module" src="/static/js/node.js"></script>
+</body>
+</html>

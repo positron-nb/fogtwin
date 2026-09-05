@@ -10,12 +10,12 @@ import { Orbit } from './orbit.js';
 import {
   enu, addLighting, loadSite, buildTerrain, buildRoads, buildZoneGates,
   makeDumper, setDumperState, makeLabel, makeUncertaintyRing,
-  buildFogBlanket, updateFogBlanket, fogFieldFrom,
+  buildFogBlanket, updateFogBlanket, fogFieldFrom, buildSky,
 } from './world.js';
 
 const host = document.getElementById('scene');
 let site = null, graph = null, snap = null;
-let renderer, scene, camera, orbit, fogMesh, gates, roads;
+let renderer, scene, camera, orbit, fogMesh, gates, roads, sky;
 let raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
 
 const fleet = new Map();       // vehicle_id -> { group, label, ring }
@@ -32,11 +32,33 @@ async function boot() {
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setSize(host.clientWidth, host.clientHeight);
   renderer.setClearColor(0x0B0E10);
+  // filmic response instead of a linear clamp: highlights on a wet bench roll
+  // off instead of blowing out, and the shadowed side of a highwall keeps
+  // detail rather than crushing to black
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   host.appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x0B0E10, 2600, 6200);   // aerial haze, not weather
-  addLighting(scene);
+  // aerial perspective, not weather: distant benches wash toward the horizon
+  // colour so depth reads even when the fog blanket is clear
+  scene.fog = new THREE.Fog(0x66737D, 2400, 8200);
+
+  // the Bailadila benches sit near 1100 m, so anchoring the sun to y=0 would
+  // put the whole pit behind the shadow camera and quietly cast nothing
+  let meanZ = 0;
+  for (let i = 0; i < site.height.length; i++) meanZ += site.height[i];
+  meanZ /= site.height.length;
+
+  const centre = new THREE.Vector3(
+    (site.minX + site.maxX) / 2, meanZ, -(site.minY + site.maxY) / 2);
+  const extent = Math.max(site.maxX - site.minX, site.maxY - site.minY) * 0.62;
+  addLighting(scene, { shadows: true, extent, centre });
+
+  sky = buildSky();
+  scene.add(sky);
 
   scene.add(buildTerrain(site));
   roads = buildRoads(site);
@@ -215,6 +237,9 @@ Object.assign(window, {
 let t0 = performance.now();
 function frame() {
   fogMesh.material.uniforms.uTime.value = (performance.now() - t0) / 1000;
+  // the pit sits ~1 km up in world Y, so ride the sky with the camera rather
+  // than trusting a fixed sphere at the origin to still enclose us
+  if (sky) sky.position.copy(camera.position);
   renderer.render(scene, camera);
 }
 

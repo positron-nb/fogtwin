@@ -14,6 +14,19 @@
   #scene { position: absolute; inset: 0; }
   #scene canvas { display: block; }
 
+  /* Looking through a cab window, not at a rectangle of pixels: the tint band
+     every haul truck carries along the top of its windscreen, and a vignette
+     because peripheral vision falls off. Sits under the HUD chrome (z-index 3)
+     so nothing readable is dimmed. */
+  .glass {
+    position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background:
+      linear-gradient(to bottom,
+        rgba(9, 15, 19, .50) 0%, rgba(9, 15, 19, .16) 9%, rgba(9, 15, 19, 0) 16%),
+      radial-gradient(128% 96% at 50% 56%,
+        rgba(0, 0, 0, 0) 46%, rgba(0, 0, 0, .40) 100%);
+  }
+
   #banner {
     position: absolute; top: 0; left: 0; right: 0; z-index: 3;
     padding: 13px 20px; font-size: 21px; font-weight: 700; letter-spacing: -.01em;
@@ -127,13 +140,19 @@
 
 <div class="topbar">
   <div class="brand">Cab <span>HUD</span></div>
+  <nav class="nav">
+    <a href="/control">Control</a>
+    <a href="/hud" aria-current="page">Cab HUD</a>
+    <a href="/hardware">Hardware</a>
+    <a href="/results">Results</a>
+    <a href="/node">Node</a>
+  </nav>
   <label class="cabpick">
     <span class="sub">cab</span>
     <select id="cabsel" title="Switch to another dumper's cab"></select>
   </label>
   <div class="sub" id="cabmeta">&mdash;</div>
   <div class="spacer"></div>
-  <a class="sub" href="/hardware" style="color:var(--slate);text-decoration:none;margin-right:8px">hardware</a>
   <button id="pipbtn" class="hot" title="Plan-view radar picture-in-picture">Radar PiP&nbsp;[R]</button>
   <button id="prevcab" title="Previous cab">&#8592;</button>
   <button id="nextcab" title="Next cab">&#8594;</button>
@@ -143,6 +162,7 @@
 
 <div class="hudwrap">
   <div id="scene"></div>
+  <div class="glass"></div>
   <div id="banner" class="info"><span class="lvl">info</span><span id="reason">waiting for twin</span></div>
   <div class="panecap" id="pane-left" style="display:none"></div>
   <div class="panecap" id="pane-right" style="display:none"></div>

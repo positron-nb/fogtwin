@@ -15,8 +15,10 @@
   #scene canvas { display: block; cursor: grab; }
   #scene canvas:active { cursor: grabbing; }
 
+  /* above #wiring and #circuit (z-index 4), or switching into a flat view
+     hides the very buttons you need to switch back out of it */
   .viewbar { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px;
-             flex-wrap: wrap; z-index: 2; }
+             flex-wrap: wrap; z-index: 6; }
   .viewbar button.on { border-color: var(--accent); color: var(--accent); }
 
   .toggles {
@@ -94,6 +96,23 @@
             background: #0B0E10; z-index: 4; padding: 22px; }
   #wiring.on { display: block; }
   #wiring svg { display: block; margin: 0 auto; max-width: 100%; }
+
+  .specs2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+            background: var(--rule); border-top: 1px solid var(--rule);
+            border-bottom: 1px solid var(--rule); }
+  .specs2 div { background: var(--panel); padding: 8px 14px; }
+  .specs2 .k { font-family: var(--mono); font-size: 8.5px; letter-spacing: .13em;
+               text-transform: uppercase; color: var(--ink-3); }
+  .specs2 .v { font-family: var(--mono); font-size: 13px; color: var(--ink); margin-top: 3px; }
+  .cnote { padding: 9px 14px; font-size: 11.5px; line-height: 1.5; color: var(--ink-2);
+           border-bottom: 1px solid var(--rule); }
+  ul.plist { margin: 0; padding: 8px 14px 10px 28px; }
+  ul.plist li { font-size: 11.5px; line-height: 1.55; color: var(--ink-2); margin-bottom: 3px; }
+
+  #circuit { display: none; position: absolute; inset: 0; overflow: auto;
+             background: #0B0E10; z-index: 4; padding: 18px 22px 28px; }
+  #circuit.on { display: block; }
+  #circuit svg { display: block; margin: 0 auto; min-width: 1120px; max-width: 100%; }
   .legend { position: absolute; left: 12px; bottom: 12px; z-index: 2;
             background: rgba(16,20,23,.88); border: 1px solid var(--rule);
             padding: 9px 12px; font-family: var(--mono); font-size: 10px;
@@ -106,9 +125,14 @@
 <div class="topbar">
   <div class="brand">Bailadila <span>FogTwin</span></div>
   <div class="sub">Hardware &middot; retrofit kit</div>
+  <nav class="nav">
+    <a href="/control">Control</a>
+    <a href="/hud">Cab HUD</a>
+    <a href="/hardware" aria-current="page">Hardware</a>
+    <a href="/results">Results</a>
+    <a href="/node">Node</a>
+  </nav>
   <div class="spacer"></div>
-  <a class="sub" href="/control" style="color:var(--slate);text-decoration:none">control room</a>
-  <a class="sub" href="/hud" style="color:var(--slate);text-decoration:none">cab hud</a>
   <button id="tourbtn" class="hot">Guided tour</button>
 </div>
 
@@ -120,7 +144,8 @@
       <button data-view="dumper" class="on">Dumper kit</button>
       <button data-view="site">Site infrastructure</button>
       <button data-view="rover">Rover prototype</button>
-      <button data-view="wiring">Wiring &amp; BOM</button>
+      <button data-view="wiring">Wiring &amp; parts</button>
+      <button data-view="circuit">Circuit schematic</button>
       <button id="explode">Exploded view</button>
     </div>
 
@@ -135,6 +160,7 @@
     </div>
 
     <div id="wiring"></div>
+    <div id="circuit"></div>
 
     <div id="tour">
       <div class="num" id="tournum">01 / 09</div>

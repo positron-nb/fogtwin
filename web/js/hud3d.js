@@ -10,7 +10,7 @@
 
 import * as THREE from '../vendor/three.module.js';
 import {
-  enu, loadSite, buildTerrain, buildRoads, buildZoneGates,
+  enu, loadSite, buildTerrain, buildRoads, buildZoneGates, buildSky,
   makeDumper, setDumperState, makeLabel, setLabelText, fogDensity, fogExpDensity,
 } from './world.js';
 import { detectionSectors, blindSectors, isSensed, wrapDeg } from './sensors.js';
@@ -35,7 +35,7 @@ let pipCtx = null, lastPip = 0;
 const EYE_H = 3.4;              // operator eye height above the road, metres
 
 let renderer, scene, camera, site, graph;
-let overlay, corridorMesh, corridorEdges, holdGate, distGates;
+let overlay, corridorMesh, corridorEdges, holdGate, distGates, sky;
 let hemi, sun;
 let adv = null, split = false;
 const neighbourMeshes = new Map();
@@ -63,12 +63,23 @@ async function boot() {
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setSize(host.clientWidth, host.clientHeight);
   renderer.autoClear = false;
+  // same filmic response as the control room, so a bench looks like the same
+  // rock from the cab as it does from the office
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
   host.appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
   scene.add(buildTerrain(site));
   scene.add(buildRoads(site));
   scene.add(buildZoneGates(site));
+
+  // A gradient sky the windscreen can fade out as the fog closes. Without it
+  // a clear morning reads as the same grey murk as an 8 m whiteout, which
+  // throws away the contrast the whole split view exists to show.
+  sky = buildSky('#2B3C4A', '#93A2AC', '#241C16');
+  sky.material.transparent = true;
+  scene.add(sky);
 
   hemi = new THREE.HemisphereLight(0xAEBCC4, 0x2A2320, 1.15);
   sun = new THREE.DirectionalLight(0xFFF2E0, 0.85);
@@ -318,15 +329,37 @@ function renderPane(x, w, h, mode) {
     scene.fog = new THREE.FogExp2(0xCED6DA, fogExpDensity(vis));
     // sky must converge on the fog colour, or the terrain keeps a silhouette
     // against it and the white-out reads as fake
+    const murk = Math.min(1, fogDensity(vis) * 1.7);
     scene.background = new THREE.Color(0x1A2126)
-      .lerp(new THREE.Color(0xCED6DA), Math.min(1, fogDensity(vis) * 1.7));
-    hemi.intensity = 1.5; sun.intensity = 0.25;
+      .lerp(new THREE.Color(0xCED6DA), murk);
+    // the gradient sky fades out as the flat fog colour takes over behind it
+    sky.visible = true;
+    sky.material.opacity = 1 - murk;
+
+    // Fog does not just hide things, it destroys the sun: droplets scatter a
+    // beam into uniform glare. So directional light dies faster than the fog
+    // thickens while skylight rises to replace it, and a whiteout ends up
+    // shadowless — which is exactly why depth perception goes with it.
+    const diffuse = Math.min(1, fogDensity(vis) * 6);
+    hemi.intensity = 0.95 + 0.75 * diffuse;
+    sun.intensity = 1.75 * (1 - diffuse);
+    renderer.toneMappingExposure = 1.1;
     overlay.visible = false;
   } else {
-    // synthetic vision: no weather, dim terrain, bright surveyed geometry
-    scene.fog = new THREE.Fog(0x0A0E11, 400, 1600);
-    scene.background = new THREE.Color(0x0A0E11);
-    hemi.intensity = 0.34; sun.intensity = 0.2;
+    /* Synthetic vision. The terrain used to be pushed almost to black so the
+       overlay would dominate, but that threw away the thing the pane exists to
+       show: the driver still has to read the road edge, the bench toe and the
+       grade. Lit properly it reads as a night-vision channel rather than an
+       unlit scene, and the overlay stays on top because it is emissive.
+
+       The fog also started at 400 m, which swallowed the road inside the
+       stopping distance it is meant to cover. Surveyed geometry has no
+       visibility limit, so the near plane goes out to where the pit ends. */
+    scene.fog = new THREE.Fog(0x16222B, 1200, 5200);
+    scene.background = new THREE.Color(0x111B23);
+    sky.visible = false;
+    hemi.intensity = 1.35; sun.intensity = 0.9;
+    renderer.toneMappingExposure = 1.45;
     overlay.visible = true;
   }
   renderer.render(scene, camera);
@@ -339,6 +372,7 @@ function frame() {
   last = now;
 
   updateCamera(dt);
+  if (sky) sky.position.copy(camera.position);
   const W = renderer.domElement.width / renderer.getPixelRatio();
   const H = renderer.domElement.height / renderer.getPixelRatio();
 

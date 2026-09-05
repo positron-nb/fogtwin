@@ -9,8 +9,16 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/static/style.css">
 <style>
-  body { overflow: auto; }
+  /* style.css pins html and body to the viewport with overflow hidden, which
+     suits the three fullscreen surfaces but makes this long document scroll
+     inside <body> instead of the window -- so window scroll events never fire
+     and scrollY stays nailed at zero. Hand scrolling back to the document. Note `visible`, not `auto`:
+     `auto` would make <body> its own scroll container, and a sticky topbar
+     inside it would then have nothing to stick to. */
+  html, body { height: auto; overflow: visible; }
   main { max-width: 1120px; margin: 0 auto; padding: 30px 26px 90px; }
+  /* the only page long enough to lose its own navigation off the top */
+  .topbar { position: sticky; top: 0; z-index: 30; }
 
   h1 { font-size: 30px; font-weight: 700; letter-spacing: -.03em; margin: 0 0 6px; }
   .sub2 { font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
@@ -78,18 +86,83 @@
             border: 1px solid var(--rule); padding: 10px 14px; margin: 14px 0; background: var(--panel); }
   .miss { padding: 40px; text-align: center; font-family: var(--mono);
           font-size: 12px; color: var(--ink-3); border: 1px solid var(--rule); }
+
+  /* scroll progress — a long page of evidence benefits from a sense of place */
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px;
+              background: transparent; z-index: 40; pointer-events: none; }
+  .progress i { display: block; height: 100%; width: 0;
+                background: linear-gradient(90deg, var(--slate), var(--accent)); }
+
+  .chartwrap .bar { cursor: crosshair; }
+  .chartwrap .bar:hover { opacity: 1 !important; }
+  /* base state, so this holds with reduced motion too -- the animated rules
+     below only fade the whiskers in to this same value */
+  .chartwrap .whisk { opacity: .55; }
+
+  /* ------------------------------------------------------------------
+     Motion. Everything below is opt-in: with prefers-reduced-motion the
+     page renders finished and static, which is also what a print or a
+     screenshot gets.
+     ------------------------------------------------------------------ */
+  /* never let the reveal state survive into print */
+  @media print {
+    .reveal { opacity: 1 !important; filter: none !important; transform: none !important; }
+    .progress { display: none; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { opacity: 0; filter: blur(9px); transform: translateY(16px);
+              transition: opacity .62s ease, filter .62s ease,
+                          transform .62s cubic-bezier(.22,.85,.28,1); }
+    .reveal.in { opacity: 1; filter: blur(0); transform: none; }
+
+    /* bars scale from their own baseline, so the axis stays put */
+    .chartwrap .bar { transform: scaleY(0); transform-origin: 50% 100%;
+                      transform-box: fill-box;
+                      transition: transform .9s cubic-bezier(.2,.85,.25,1);
+                      transition-delay: var(--d, 0ms); }
+    .chartwrap.in .bar { transform: scaleY(1); }
+
+    /* curves draw themselves in; the dash length is a generous over-estimate
+       of any path here, which is all stroke-dashoffset needs to hide one */
+    .chartwrap .line { stroke-dasharray: 3000; stroke-dashoffset: 3000;
+                       transition: stroke-dashoffset 1.15s ease;
+                       transition-delay: var(--d, 0ms); }
+    .chartwrap.in .line { stroke-dashoffset: 0; }
+    .chartwrap .dot { opacity: 0; transition: opacity .45s ease;
+                      transition-delay: calc(var(--d, 0ms) + 850ms); }
+    .chartwrap.in .dot { opacity: 1; }
+
+    /* the value and its error bar arrive once the bar has got there */
+    .chartwrap .whisk, .chartwrap .blab { opacity: 0;
+      transition: opacity .4s ease; transition-delay: calc(var(--d, 0ms) + 640ms); }
+    .chartwrap.in .whisk { opacity: .55; }
+    .chartwrap.in .blab { opacity: 1; }
+
+    .headline div { opacity: 0; transform: translateY(10px);
+                    transition: opacity .5s ease, transform .5s ease; }
+    .headline.in div { opacity: 1; transform: none; }
+    .headline.in div:nth-child(2) { transition-delay: .08s; }
+    .headline.in div:nth-child(3) { transition-delay: .16s; }
+    .headline.in div:nth-child(4) { transition-delay: .24s; }
+  }
 </style>
 </head>
 <body>
 
+<div class="progress"><i id="prog"></i></div>
+
 <div class="topbar">
   <div class="brand">Bailadila <span>FogTwin</span></div>
   <div class="sub">Measured results</div>
+  <nav class="nav">
+    <a href="/control">Control</a>
+    <a href="/hud">Cab HUD</a>
+    <a href="/hardware">Hardware</a>
+    <a href="/results" aria-current="page">Results</a>
+    <a href="/node">Node</a>
+  </nav>
   <div class="spacer"></div>
-  <a class="sub" href="/control" style="color:var(--slate);text-decoration:none">control room</a>
-  <a class="sub" href="/hud" style="color:var(--slate);text-decoration:none">cab hud</a>
-  <a class="sub" href="/hardware" style="color:var(--slate);text-decoration:none">hardware</a>
-  <a class="sub" href="/prototype" style="color:var(--slate);text-decoration:none">prototype</a>
 </div>
 
 <main id="main">

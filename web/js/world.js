@@ -55,6 +55,107 @@ function valueNoise(x, y) {
 /* Site: DEM + road graph + the carved height field                    */
 /* ================================================================== */
 
+/**
+ * Value noise that tiles exactly over `period` lattice cells, so a texture
+ * built from it has no visible seam when repeated across the pit.
+ */
+function periodicNoise(x, y, period) {
+  const xi = Math.floor(x), yi = Math.floor(y);
+  const xf = x - xi, yf = y - yi;
+  const w = a => ((a % period) + period) % period;
+  const h = (a, b) => hash2(w(a), w(b));
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const a = h(xi, yi), b = h(xi + 1, yi);
+  const c = h(xi, yi + 1), d = h(xi + 1, yi + 1);
+  return (a * (1 - u) + b * u) * (1 - v) + (c * (1 - u) + d * u) * v;
+}
+
+let _rockSrc = null;
+
+/**
+ * A tiling normal map of broken rock. The DEM gives us metre-scale form; this
+ * supplies the centimetre-scale relief underneath it, which is what makes a
+ * bench face catch a low sun instead of reading as a flat ramp.
+ *
+ * Returns a clone so each surface can set its own repeat without fighting.
+ */
+export function rockNormalTexture(repeatX = 1, repeatY = 1) {
+  if (!_rockSrc) {
+    const S = 256;
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = S;
+    const ctx = cv.getContext('2d');
+    const img = ctx.createImageData(S, S);
+
+    const height = new Float32Array(S * S);
+    for (let y = 0; y < S; y++) {
+      for (let x = 0; x < S; x++) {
+        // octaves chosen so each one closes on itself across the tile
+        let v = 0, amp = 1, cells = 8;
+        for (let o = 0; o < 4; o++) {
+          v += periodicNoise(x * cells / S, y * cells / S, cells) * amp;
+          amp *= 0.5; cells *= 2;
+        }
+        height[y * S + x] = v;
+      }
+    }
+
+    for (let y = 0; y < S; y++) {
+      for (let x = 0; x < S; x++) {
+        const l = height[y * S + (x - 1 + S) % S];
+        const r = height[y * S + (x + 1) % S];
+        const d = height[((y - 1 + S) % S) * S + x];
+        const u = height[((y + 1) % S) * S + x];
+        const nx = (l - r) * 2.6, ny = (d - u) * 2.6, nz = 1;
+        const inv = 1 / Math.hypot(nx, ny, nz);
+        const i = (y * S + x) * 4;
+        img.data[i] = (nx * inv * 0.5 + 0.5) * 255;
+        img.data[i + 1] = (ny * inv * 0.5 + 0.5) * 255;
+        img.data[i + 2] = (nz * inv * 0.5 + 0.5) * 255;
+        img.data[i + 3] = 255;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+    _rockSrc = new THREE.CanvasTexture(cv);
+    _rockSrc.wrapS = _rockSrc.wrapT = THREE.RepeatWrapping;
+  }
+
+  const t = _rockSrc.clone();
+  t.needsUpdate = true;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(repeatX, repeatY);
+  return t;
+}
+
+/**
+ * Gradient sky. Without one the pit floats in a void, and every distance cue
+ * the fog is trying to give you lands on flat black.
+ */
+export function buildSky(zenith = '#22303C', horizon = '#7C8A93', ground = '#201914') {
+  const geo = new THREE.SphereGeometry(1, 48, 24);
+  const pos = geo.attributes.position;
+  const col = new Float32Array(pos.count * 3);
+  const cz = new THREE.Color(zenith), ch = new THREE.Color(horizon);
+  const cg = new THREE.Color(ground), c = new THREE.Color();
+
+  for (let i = 0; i < pos.count; i++) {
+    const y = pos.getY(i) / Math.max(1e-6, Math.hypot(pos.getX(i), pos.getY(i), pos.getZ(i)));
+    if (y >= 0) c.copy(ch).lerp(cz, Math.pow(y, 0.55));
+    else c.copy(ch).lerp(cg, Math.pow(-y, 0.35));
+    col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
+  }
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+
+  const sky = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+    vertexColors: true, side: THREE.BackSide, depthWrite: false, fog: false,
+  }));
+  sky.scale.setScalar(9000);
+  sky.renderOrder = -1;
+  sky.frustumCulled = false;
+  return sky;
+}
+
+
 export async function loadSite() {
   const [graph, demMeta] = await Promise.all([
     fetch('/api/roadgraph').then(r => r.json()),
@@ -216,11 +317,16 @@ export function buildTerrain(site) {
 
   // Bailadila ore is a hard blue-grey haematite that weathers red-brown; bench
   // tops carry pale crushed laterite tracked out by haulage.
-  const faceRock = new THREE.Color('#463A34');
-  const benchTop = new THREE.Color('#7A6857');
-  const oreBand = new THREE.Color('#5C3226');
-  const running = new THREE.Color('#4C4642');
+  const faceRock = new THREE.Color('#5C4A3D');
+  const benchTop = new THREE.Color('#8B7663');
+  const oreBand = new THREE.Color('#6E3826');
+  const running = new THREE.Color('#6B5F53');
+  const crevice = new THREE.Color('#31281F');
   const c = new THREE.Color();
+
+  const H = site.height, C = site.cols, R = site.rows;
+  const at = (cc, rr) => H[Math.max(0, Math.min(R - 1, rr)) * C
+                           + Math.max(0, Math.min(C - 1, cc))];
 
   // PlaneGeometry rows run from +y down, so mesh row 0 is our maxY
   for (let r = 0; r < site.rows; r++) {
@@ -230,20 +336,30 @@ export function buildTerrain(site) {
       const h = site.height[src];
       pos.setZ(i, h);
 
-      const east = site.height[src + (ci < site.cols - 1 ? 1 : 0)];
-      const north = site.height[src - (r > 0 ? site.cols : 0)];
-      const slope = Math.min(1, (Math.abs(east - h) + Math.abs(north - h)) / 7);
+      const srcR = site.rows - 1 - r;
+      // central differences read the true gradient; the old one-sided pair
+      // missed the downhill face of every bench crest
+      const east = at(ci + 1, srcR), west = at(ci - 1, srcR);
+      const north = at(ci, srcR - 1), south = at(ci, srcR + 1);
+      const slope = Math.min(1, (Math.abs(east - west) + Math.abs(north - south)) / 14);
+      // sitting below the local mean means a bench toe or a gully — the places
+      // skylight cannot reach. A cheap stand-in for ambient occlusion.
+      const conc = Math.max(0, (east + west + north + south) / 4 - h) / 6;
 
       const px = site.minX + ci * site.dx;
-      const py = site.minY + (site.rows - 1 - r) * site.dy;
+      const py = site.minY + srcR * site.dy;
 
       if (site.roadDist[src] <= site.roadHw[src]) {
         c.copy(running);
       } else {
         c.copy(benchTop).lerp(faceRock, slope);
-        c.lerp(oreBand, 0.3 * (0.5 + 0.5 * Math.sin(px * 0.008 + py * 0.011)));
+        // haematite stains the cut faces, not the dusty bench tops
+        c.lerp(oreBand, 0.34 * (0.5 + 0.5 * Math.sin(px * 0.008 + py * 0.011))
+                             * (0.3 + 0.7 * slope));
       }
-      c.offsetHSL(0, 0, valueNoise(px / 9, py / 9) * 0.07);
+      c.offsetHSL(0, 0, valueNoise(px / 9, py / 9) * 0.06
+                        + valueNoise(px / 47, py / 47) * 0.05 - 0.028);
+      c.lerp(crevice, Math.min(0.32, conc));
       colours[i * 3] = c.r; colours[i * 3 + 1] = c.g; colours[i * 3 + 2] = c.b;
     }
   }
@@ -251,11 +367,16 @@ export function buildTerrain(site) {
   geo.setAttribute('color', new THREE.BufferAttribute(colours, 3));
   geo.computeVertexNormals();
 
+  const spanX = site.maxX - site.minX, spanY = site.maxY - site.minY;
   const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
-    vertexColors: true, roughness: 0.97, metalness: 0.02,
+    vertexColors: true, roughness: 0.95, metalness: 0.0,
+    normalMap: rockNormalTexture(spanX / 42, spanY / 42),
+    normalScale: new THREE.Vector2(0.45, 0.45),
   }));
   mesh.rotation.x = -Math.PI / 2;
   mesh.position.set((site.minX + site.maxX) / 2, 0, -(site.minY + site.maxY) / 2);
+  mesh.receiveShadow = true;
+  mesh.castShadow = true;
   return mesh;
 }
 
@@ -297,12 +418,15 @@ export function buildRoads(site) {
     geo.computeVertexNormals();
 
     const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
-      color: e.conflict_zone ? 0x574B44 : 0x5E564F,
-      roughness: 0.98, metalness: 0,
+      color: e.conflict_zone ? 0x63544B : 0x6E6357,
+      roughness: 0.99, metalness: 0,
+      normalMap: rockNormalTexture(Math.max(2, len / 9), 2),
+      normalScale: new THREE.Vector2(0.35, 0.35),
       // the carved platform sits at the same elevation, so bias the road
       // surface forward or the two z-fight across the whole network
       polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
     }));
+    mesh.receiveShadow = true;
     mesh.userData.edge = e;
     surfaces[e.id] = mesh;
     group.add(mesh);
@@ -399,6 +523,21 @@ export function makeDumper(alert = 'info', loaded = false) {
   ore.visible = loaded;
   g.add(ore);
 
+  // exhaust stack and a headlight pair: small, but they give the machine a
+  // front, which is what makes a moving box read as a truck
+  const stack = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.32 * S, 0.38 * S, 2.6 * S, 8), dark);
+  stack.position.set(2.6 * S, 6.9 * S, -1.1 * S);
+  g.add(stack);
+
+  const lampMat = new THREE.MeshStandardMaterial({
+    color: 0xFFF0D0, emissive: 0xFFD9A0, emissiveIntensity: 1.4, roughness: 0.4 });
+  for (const lz of [1.7, -1.7]) {
+    const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.3 * S, 0.7 * S, 0.9 * S), lampMat);
+    lamp.position.set(5.05 * S, 3.4 * S, lz * S);
+    g.add(lamp);
+  }
+
   const beaconMat = new THREE.MeshBasicMaterial({ color: ALERT_COLOUR[alert] || 0x9AA6AD });
   const beacon = new THREE.Mesh(new THREE.SphereGeometry(1.6 * S, 10, 8), beaconMat);
   beacon.position.set(3.3 * S, 7.4 * S, 0.9 * S);
@@ -412,6 +551,12 @@ export function makeDumper(alert = 'info', loaded = false) {
   halo.rotation.x = -Math.PI / 2;
   halo.position.y = 0.7;
   g.add(halo);
+
+  // the halo is a ground decal and the beacon is unlit, so neither should
+  // throw geometry into the shadow map
+  for (const child of g.children) {
+    child.castShadow = child !== halo && child !== beacon;
+  }
 
   g.userData = { beaconMat, halo, ore };
   return g;
@@ -619,14 +764,62 @@ export function updateFogBlanket(mesh, visibilityAt) {
 
 /* ================================================================== */
 
-export function addLighting(scene) {
-  // overcast monsoon light: low contrast, heavy sky term
-  scene.add(new THREE.HemisphereLight(0xB4C2CA, 0x2E2622, 1.05));
-  const sun = new THREE.DirectionalLight(0xFFF4E6, 0.95);
-  sun.position.set(600, 900, 420);
-  scene.add(sun);
-  const fill = new THREE.DirectionalLight(0x6FA8C8, 0.28);
-  fill.position.set(-700, 400, -600);
+/**
+ * Mid-morning after the monsoon burns off: a sun low enough to rake the bench
+ * faces, a strong sky term because the overcast is never far away, and a warm
+ * bounce off the pit floor so the shadowed side of a highwall is not a hole.
+ *
+ * `shadows` is opt-in — the control room wants them, the cab HUD is already
+ * spending its budget on the corridor render.
+ */
+export function addLighting(scene, opts = {}) {
+  const { shadows = false, extent = 1800, centre = null } = opts;
+
+  const hemi = new THREE.HemisphereLight(0xB6C6D4, 0x46372A, 0.98);
+  scene.add(hemi);
+
+  const sun = new THREE.DirectionalLight(0xFFEBD2, 1.55);
+
+  // ~26 degrees above the horizon. Higher than this and a 15 m bench throws a
+  // shadow too short to read across a 40 m bench; much lower and the pit floor
+  // stops getting any sun at all.
+  const dir = new THREE.Vector3(940, 555, 640).normalize();
+
+  // Stand the light right outside the site. A directional light only needs a
+  // direction for shading, but its shadow camera is a real orthographic
+  // frustum pinned at this position — park it too close and the half of the
+  // terrain nearest the sun falls behind the near plane, so the geometry that
+  // should be casting the longest shadows is silently clipped away.
+  const dist = shadows ? extent * 2.4 : 1400;
+  sun.position.copy(dir).multiplyScalar(dist);
+
+  if (centre) {
+    sun.position.add(centre);
+    sun.target.position.copy(centre);
+  }
+  if (shadows) {
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048);
+    const c = sun.shadow.camera;
+    c.left = -extent; c.right = extent;
+    c.top = extent; c.bottom = -extent;
+    c.near = dist - extent * 1.6;
+    c.far = dist + extent * 1.9;
+    c.updateProjectionMatrix();
+    // small: the bench-crest shadows worth having are only ~25 m long, and a
+    // generous normal bias slides them off the face they belong to
+    sun.shadow.bias = -0.0004;
+    sun.shadow.normalBias = 0.35;
+  }
+  scene.add(sun, sun.target);
+
+  const fill = new THREE.DirectionalLight(0x86AECA, 0.34);
+  fill.position.set(-700, 420, -600);
   scene.add(fill);
-  return { sun, fill };
+
+  const bounce = new THREE.DirectionalLight(0xC9906A, 0.20);
+  bounce.position.set(180, -420, -280);
+  scene.add(bounce);
+
+  return { sun, fill, bounce, hemi };
 }

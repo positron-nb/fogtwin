@@ -29,7 +29,6 @@ Then open:
 | Cab HUD (dumper DT-101) | http://localhost:8000/hud?vehicle=DT-101 |
 | Hardware demonstrator | http://localhost:8000/hardware |
 | Measured results | http://localhost:8000/results |
-| ESP32 prototype node | http://localhost:8000/prototype |
 | API docs | http://localhost:8000/docs |
 
 The server starts an in-process fleet simulator by default (6 dumpers driving the
@@ -49,8 +48,8 @@ data/            roadgraph.json — nodes, edges, conflict zones, met stations.
 sim/             Fleet simulator — in-process, plus an HTTP publisher for a second machine.
 firmware/        Rover node: ESP32 sketch and the same protocol in Python.
 run_demo.py      One command: twin up, three surfaces open, running order printed.
-data/hardware.json  The kit: mounts, coverage, wiring, BOM, rover mapping. One manifest.
-web/             Control room, cab HUD, hardware, results and prototype pages.
+data/hardware.json  The kit: mounts, coverage, wiring, parts, rover mapping. One manifest.
+web/             Control room, cab HUD, hardware, results and node pages.
 web/vendor/      three.js r160 (MIT), vendored — the mine network is air-gapped.
 tests/           Invariant checks worth being able to run in front of a judge.
 ```
@@ -206,8 +205,8 @@ same number drives both the white-out and the speed limit.
 
 We cannot wheel a 100 tonne dumper into the hall, so `/hardware` stands in for
 one. Four views, all fed from `data/hardware.json` — the 3D mounts, the coverage
-volumes, the wiring diagram and the BOM read from a single manifest, so the
-scene and the cost table cannot drift apart.
+volumes, the wiring diagram and the parts list read from a single manifest, so
+the scene and the table cannot drift apart.
 
 | View | Shows |
 | --- | --- |
@@ -215,7 +214,7 @@ scene and the cost table cannot drift apart.
 | **Site infrastructure** | Roadside units, met stations, the RTK base and UWB anchors placed on the real Bailadila ridge against the actual haul network, with radio and ranging coverage on demand. |
 | **Rover prototype** | The machine we did build, at true scale, with every part mapped to the production component it stands in for. One button frames it beside a true-scale dumper envelope, because the size gap is the honest part. |
 | **Blind spots** | On the dumper view, the arcs no sensor reaches, drawn on the ground. Two modes: *any sensor* and *in fog*. |
-| **Wiring &amp; BOM** | Power and data topology — one isolated supply, one compute hub — plus the bill of materials. Currently **&#8377;1,48,500** per dumper at **85 W** peak draw, and **&#8377;66,59,000** for a 30-dumper pilot including site infrastructure, the twin server and the survey — a ~32% cut on the kit and ~31% on the pilot, by re-pricing eval-kit and tactical-grade parts as their production equivalents. The forward 77 GHz radar is untouched; click any changed component on the page for the swap and why it does not cost accuracy. |
+| **Wiring &amp; parts** | Power and data topology — one isolated supply, one compute hub — plus the parts list. Fifteen components per dumper at **85 W** peak draw, off an isolated 24 V supply, fitted in under one shift with no driveline change and no OEM cooperation. |
 
 ### The blind spots are shown, not hidden
 
@@ -231,10 +230,10 @@ Both the hardware page and the cab HUD read the same module, so the coverage
 shown to a judge and the coverage the operator is flying on cannot disagree —
 add a fourth radar to `data/hardware.json` and both surfaces update together.
 
-Say this before a judge finds it: two more corner radars at &#8377;9k each close
-both wedges, and the reason they are not in the phase-one fit is that the two
+Say this before a judge finds it: two more corner radars would close both
+wedges, and the reason they are not in the phase-one fit is that the two
 geometries that dominate mine accident statistics — rear-end on a ramp and
-reversing at a tip — are already covered. At that price the honest answer to
+reversing at a tip — are already covered. The honest answer to
 "so why not just fit them" is install time and harness routing, not budget.
 
 **Guided tour** runs nine steps across all four views with the narration written
@@ -244,18 +243,27 @@ exits, and a judge can take the mouse at any point and explore freely.
 ## Does it actually help? Measured.
 
 ```bash
-python -m scripts.experiment --seeds 4 --minutes 25
+python -m scripts.experiment --seeds 6 --minutes 25 \
+        --visibilities 1000 400 200 100 60 35 20 8
 ```
 
 Two arms, identical road, fleet, weather and random seed. One variable: the
 baseline drives to what the eye can see and has no arbitration at conflict
 zones; FogTwin uses the surveyed corridor and the token interlocking.
 
+96 runs: 8 visibility levels, 6 seeds, 2 arms. Five of the eight rows:
+
 | Visibility | Loaded tonne-km/h, baseline | FogTwin | Gain | Mean km/h | Conflict-zone co-occupancy, s/h |
 | --- | --- | --- | --- | --- | --- |
-| 1000 m | 6444 &plusmn;951 | 6329 &plusmn;931 | **0.98&times;** | 25.6 &rarr; 25.3 | 186 &rarr; 29 |
-| 50 m | 6444 &plusmn;951 | 6329 &plusmn;931 | **0.98&times;** | 25.4 &rarr; 25.3 | 159 &rarr; 29 |
-| 8 m | 3151 &plusmn;419 | 6329 &plusmn;931 | **2.01&times;** | 10.6 &rarr; 25.3 | 232 &rarr; 29 |
+| 1000 m | 6505 &plusmn;2054 | 6401 &plusmn;2028 | **0.98&times;** | 25.6 &rarr; 25.3 | 182 &rarr; 28 |
+| 60 m | 6505 &plusmn;2054 | 6401 &plusmn;2028 | **0.98&times;** | 25.5 &rarr; 25.3 | 172 &rarr; 28 |
+| 35 m | 6313 &plusmn;1994 | 6401 &plusmn;2028 | **1.01&times;** | 24.2 &rarr; 25.3 | 136 &rarr; 28 |
+| 20 m | 5171 &plusmn;1614 | 6401 &plusmn;2028 | **1.24&times;** | 19.0 &rarr; 25.3 | 123 &rarr; 28 |
+| 8 m | 3231 &plusmn;917 | 6401 &plusmn;2028 | **1.98&times;** | 10.6 &rarr; 25.3 | 228 &rarr; 28 |
+
+The interesting number is not the headline but the crossover: the twin is a
+rounding error until about 35 m of visibility, and the only thing keeping the
+mine productive below 20 m.
 
 Read honestly:
 
@@ -263,7 +271,7 @@ Read honestly:
   interlocking charging its throughput price with no fog benefit to pay for it.
   Keep this row in the deck. A model that only ever flatters the product is a
   model nobody believes.
-* **At 8 m visibility it doubles loaded haulage work** at 2.4&times; the speed,
+* **At 8 m visibility it very nearly doubles loaded haulage work** (1.98&times;) at 2.4&times; the speed,
   while cutting time spent with two machines in one single-lane zone by 8&times;.
 * **Co-occupancy does not reach zero**, and cannot in phase one: the twin has no
   vehicle-control authority, so a dumper already inside a zone when its token is
@@ -287,19 +295,11 @@ Two bugs this experiment found, both now fixed and both worth knowing about:
    telling the fleet the mine was clear. It now holds the last known field and
    exposes `is_stale()`.
 
-### Two pages that read from data, not from prose
+### A page that reads from data, not from prose
 
 `/results` renders `data/experiment.json` — every number, error bar and
 honest-reading note is computed from the file, so the page cannot drift from the
 experiment and you can regenerate it in front of a judge.
-
-`/prototype` is the ESP32 build page: bill of materials at **&#8377;880**
-required, a wiring diagram, flashing steps with the two gotchas that will
-actually catch you (Windows Firewall on port 8000, and 2.4 GHz-only ESP32 radios
-against a 5 GHz hotspot), the exact JSON the node puts on the wire, and a **live
-indicator** that lights up when an `RV-` node is publishing. No hardware yet?
-`python firmware/rover_desktop.py` speaks the identical protocol and lights the
-same indicator.
 
 ## Demo controls
 
