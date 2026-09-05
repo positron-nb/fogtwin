@@ -17,3 +17,20 @@ Thumbs.db
 
 # local experiment logs (data/experiment.json itself IS committed — it's what /results reads)
 data/experiment_run.log
+
+# local network settings for the rover — copy secrets.example.h and fill in
+firmware/rover_esp32/secrets.h
+
+# presentation and documentation artefacts. These are built from ppt_build/,
+# which is 67 MB of working files and slide sources; the repository holds the
+# system, not the pitch material.
+/FogTwin_*.pdf
+/FogTwin_*.png
+/FogTwin_*.pptx
+ppt_build/
+
+# assistant/editor session state
+.claude/
+
+# stale local copies
+*.bak
